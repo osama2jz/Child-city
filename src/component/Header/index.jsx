@@ -100,7 +100,7 @@ const Header = ({ opened, toggle }) => {
           justifyContent: "space-around",
           alignItems: "center",
           width: "100%",
-          position:"relative",
+          position: "relative",
           paddingBlock: isMobile ? "10px" : "10px",
           backgroundColor: "white",
           boxShadow: "0px 5px 5px rgb(0,0,0,0.1)",
@@ -116,14 +116,19 @@ const Header = ({ opened, toggle }) => {
         <Flex gap={"lg"} align={"center"} className={classes.navigationBar}>
           <Link
             className={classes.link}
-            to="/"
+            to="/product-category/New Born"
             onClick={() => isMobile && toggle()}
           >
             New Born
           </Link>
           <Menu trigger="hover">
             <Menu.Target>
-              <Link className={classes.link}>Boys Clothing</Link>
+              <Link
+                className={classes.link}
+                to="/product-category/Boys Clothing"
+              >
+                Boys Clothing
+              </Link>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Pre Winter</Menu.Label>
@@ -198,7 +203,12 @@ const Header = ({ opened, toggle }) => {
           </Menu>
           <Menu trigger="hover">
             <Menu.Target>
-              <Link className={classes.link}>Girls Clothing</Link>
+              <Link
+                className={classes.link}
+                to="/product-category/Girls Clothing"
+              >
+                Girls Clothing
+              </Link>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Pre Winter</Menu.Label>
@@ -273,14 +283,14 @@ const Header = ({ opened, toggle }) => {
           </Menu>
           <Link
             className={classes.link}
-            to="/portfolio"
+            to="/product-category/Toys & Games"
             onClick={() => isMobile && toggle()}
           >
             Toys & Games
           </Link>
           <Link
             className={classes.link}
-            to="/products"
+            to="/product-category/accessories"
             onClick={() => isMobile && toggle()}
           >
             Accessories
