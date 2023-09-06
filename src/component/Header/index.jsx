@@ -7,6 +7,7 @@ import {
   Indicator,
   Menu,
   Text,
+  useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import React, { useState } from "react";
@@ -14,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   BrandFacebook,
   BrandInstagram,
+  BrandYoutube,
   Heart,
   Mail,
   Phone,
@@ -27,12 +29,13 @@ import { useStyles } from "./styles";
 const Header = ({ opened, toggle }) => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const navigate = useNavigate();
+  const theme = useMantineTheme();
   const { classes } = useStyles({ opened });
   const [show, setShow] = useState(true);
   return (
     <>
       <Flex
-        bg="#1e73be"
+        bg={"blue"}
         style={{
           color: "white",
           display: show ? "flex" : "none",
@@ -64,7 +67,7 @@ const Header = ({ opened, toggle }) => {
         style={{
           display: "flex",
           justifyContent: "space-around",
-          backgroundColor: "#1e73be",
+          backgroundColor: theme.colors.primary,
           color: "white",
           alignItems: "center",
           flexWrap: "wrap",
@@ -75,20 +78,31 @@ const Header = ({ opened, toggle }) => {
         <Flex align={"center"} gap={"md"} wrap={"wrap"} justify={"center"}>
           <Flex gap={"sm"}>
             <Mail />
-            <Text fz={isMobile ? "xs" : "md"}>shop@childcity.shop,</Text>
+            <Text fz={isMobile ? "xs" : "md"} fw="bold">
+              shop@childcity.shop,
+            </Text>
           </Flex>
           <Flex gap="sm">
             <Phone />
-            <Text fz={isMobile ? "xs" : "md"}> +92 300 7171197</Text>
+            <Text fz={isMobile ? "xs" : "md"} fw="bold">
+              {" "}
+              +92 300 7171197
+            </Text>
           </Flex>
         </Flex>
         <Flex gap={"lg"} align={"center"}>
-          <Text fz={isMobile ? "xs" : "md"}>Contact us on:</Text>
+          <Text fz={isMobile ? "xs" : "md"} fw="bold">
+            Contact us on:
+          </Text>
           <BrandFacebook
             className={classes.icon}
             onClick={() => window.open("", "_blank")}
           />
           <BrandInstagram
+            className={classes.icon}
+            onClick={() => window.open("", "_blank")}
+          />
+          <BrandYoutube
             className={classes.icon}
             onClick={() => window.open("", "_blank")}
           />
@@ -111,7 +125,7 @@ const Header = ({ opened, toggle }) => {
           className={classes.logo}
           onClick={() => navigate("/")}
         >
-          <img src={logo} width={isMobile ? 100 : 150} />
+          <img src={logo} width={isMobile ? 100 : 100} />
         </Flex>
         <Flex gap={"lg"} align={"center"} className={classes.navigationBar}>
           <Link
@@ -131,74 +145,71 @@ const Header = ({ opened, toggle }) => {
               </Link>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Pre Winter</Menu.Label>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                3-9M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                1-4Y
-              </Menu.Item>
-              <Divider />
-              <Menu.Label>Summer Collection</Menu.Label>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                3-6M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                6-9M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                9-12M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                1-2Y
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                2-3Y
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                3-4Y
-              </Menu.Item>
-              <Divider />
-              <Menu.Label>Traditional</Menu.Label>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                Shalwar Kamez
-              </Menu.Item>
+              <Flex>
+                <Box>
+                  <Menu.Label>Pre Winter</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    3-9M
+                  </Menu.Item>
+
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    1-4Y
+                  </Menu.Item>
+                </Box>
+                <Box>
+                  <Menu.Label>Summer Collection</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    3-6M
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    6-9M
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    9-12M
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    1-2Y
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    2-3Y
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    3-4Y
+                  </Menu.Item>
+                </Box>
+              </Flex>
             </Menu.Dropdown>
           </Menu>
           <Menu trigger="hover">
@@ -211,74 +222,71 @@ const Header = ({ opened, toggle }) => {
               </Link>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Pre Winter</Menu.Label>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                3-9M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                1-4Y
-              </Menu.Item>
-              <Divider />
-              <Menu.Label>Summer Collection</Menu.Label>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                3-6M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                6-9M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                9-12M
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                1-2Y
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                2-3Y
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                3-4Y
-              </Menu.Item>
-              <Divider />
-              <Menu.Label>Frocks</Menu.Label>
-              <Menu.Item
-                onClick={() => {
-                  isMobile && toggle();
-                }}
-              >
-                Frocks
-              </Menu.Item>
+              <Flex>
+                <Box>
+                  <Menu.Label>Pre Winter</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    3-9M
+                  </Menu.Item>
+
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    1-4Y
+                  </Menu.Item>
+                </Box>
+                <Box>
+                  <Menu.Label>Summer Collection</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    3-6M
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    6-9M
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    9-12M
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    1-2Y
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    2-3Y
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      isMobile && toggle();
+                    }}
+                  >
+                    3-4Y
+                  </Menu.Item>
+                </Box>
+              </Flex>
             </Menu.Dropdown>
           </Menu>
           <Link
@@ -302,6 +310,7 @@ const Header = ({ opened, toggle }) => {
           align={"center"}
           style={{ transform: isMobile ? "scale(0.8)" : "" }}
         >
+          <Search className={classes.iconS} />
           <User className={classes.iconS} />
           <Indicator
             color="pink"
@@ -325,7 +334,6 @@ const Header = ({ opened, toggle }) => {
               onClick={() => navigate("/cart")}
             />
           </Indicator>
-          <Search className={classes.iconS} />
         </Flex>
 
         {isMobile && <Burger opened={opened} onClick={toggle} color="black" />}

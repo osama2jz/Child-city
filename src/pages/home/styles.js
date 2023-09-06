@@ -18,12 +18,8 @@ export const useStyles = createStyles((theme) => ({
     height: "550px",
     position: "relative",
     backgroundRepeat: "no-repeat",
-    // backgroundSize: "100%",
-    // backgroundColor:"red",
     backgroundPosition: "top center",
-    // objectFit: "cover",
     [`@media (max-width: 1100px)`]: {
-      // height: "650px",
       backgroundSize: "1100px 600px",
     },
   },

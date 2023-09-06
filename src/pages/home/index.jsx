@@ -7,6 +7,7 @@ import {
   Stack,
   Text,
   Title,
+  useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import React from "react";
@@ -22,47 +23,104 @@ import wave1 from "../../assets/wave-top.png";
 import wave2 from "../../assets/wave-mid.png";
 import wave3 from "../../assets/wave-bot.png";
 import { useNavigate } from "react-router-dom";
+import { Carousel } from "@mantine/carousel";
 
 const Home = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
+  const theme=useMantineTheme()
   const isMobile = useMediaQuery("(max-width: 1100px)");
   return (
     <Box>
-      <Box className={classes.main}>
-        <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
-          Shine Bright
-        </Title>
-        <Title order={3}>Like a Superstar</Title>
-        <Group mt="xl">
-          <Button
-            label={"Shop Girls"}
-            onClick={() => navigate("/product-category/Girls Clothing")}
-          />
-          <Button
-            label={"Shop Boys"}
-            color="blue"
-            onClick={() => navigate("/product-category/Boys Clothing")}
-          />
-        </Group>
-        <Image src={wave1} className={classes.wave} />
-        <Image src={wave2} className={classes.wave2} />
-        <Image src={wave3} className={classes.wave1} />
-      </Box>
+      <Carousel
+        w="100%"
+        withIndicators
+        height={550}
+        loop
+        styles={{ indicator: { backgroundColor: theme.colors.primary } }}
+      >
+        <Carousel.Slide>
+          <Box className={classes.main}>
+            <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
+              Shine Bright
+            </Title>
+            <Title order={3}>Like a Superstar</Title>
+            <Group mt="xl">
+              <Button
+                label={"Shop Girls"}
+                onClick={() => navigate("/product-category/Girls Clothing")}
+              />
+              <Button
+                label={"Shop Boys"}
+                color="blue"
+                onClick={() => navigate("/product-category/Boys Clothing")}
+              />
+            </Group>
+            <Image src={wave1} className={classes.wave} />
+            <Image src={wave2} className={classes.wave2} />
+            <Image src={wave3} className={classes.wave1} />
+          </Box>
+        </Carousel.Slide>
+        <Carousel.Slide>
+          <Box className={classes.main}>
+            <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
+              Shine Bright
+            </Title>
+            <Title order={3}>Like a Superstar</Title>
+            <Group mt="xl">
+              <Button
+                label={"Shop Girls"}
+                onClick={() => navigate("/product-category/Girls Clothing")}
+              />
+              <Button
+                label={"Shop Boys"}
+                color="blue"
+                onClick={() => navigate("/product-category/Boys Clothing")}
+              />
+            </Group>
+            <Image src={wave1} className={classes.wave} />
+            <Image src={wave2} className={classes.wave2} />
+            <Image src={wave3} className={classes.wave1} />
+          </Box>
+        </Carousel.Slide>
+        {/* <Carousel.Slide>
+          <Box className={classes.main}>
+            <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
+              Shine Bright
+            </Title>
+            <Title order={3}>Like a Superstar</Title>
+            <Group mt="xl">
+              <Button
+                label={"Shop Girls"}
+                onClick={() => navigate("/product-category/Girls Clothing")}
+              />
+              <Button
+                label={"Shop Boys"}
+                color="blue"
+                onClick={() => navigate("/product-category/Boys Clothing")}
+              />
+            </Group>
+            <Image src={wave1} className={classes.wave} />
+            <Image src={wave2} className={classes.wave2} />
+            <Image src={wave3} className={classes.wave1} />
+          </Box>
+        </Carousel.Slide> */}
+      </Carousel>
+
       <Group position="center" spacing={"xl"} my="50px" mx="md">
-        <CategoryCard
-          img={girls}
-          title1={"Girls"}
-          title2={"Clothing"}
-          text={"World's Best Brands"}
-          to="/Girls Clothing"
-        />
         <CategoryCard
           img={boys}
           title1={"Boys"}
           title2={"Clothing"}
           text={"Incredible Quality"}
           to="/Boys Clothing"
+        />
+        <CategoryCard
+          img={girls}
+          title1={"Girls"}
+          title2={"Clothing"}
+          text={"World's Best Brands"}
+          to="/Girls Clothing"
         />
         <CategoryCard
           img={toys}

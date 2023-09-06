@@ -53,7 +53,7 @@ export const useStyles = createStyles((theme, { opened }) => ({
   icons: {
     backgroundColor: theme.colors.primary,
     color: "white",
-    padding: "8px",
+    padding: "10px",
     boxShadow: "0px 0px 0px 2px #81d1e5",
     borderRadius: "20px",
     border: "2px dashed white",

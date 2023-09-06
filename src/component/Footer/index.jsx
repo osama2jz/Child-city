@@ -10,11 +10,11 @@ const Footer = () => {
 
   return (
     <Box className={classes.footer}>
-      <img src={logo} width={isMobile ? 300 : 400} />
+      {/* <img src={logo} width={isMobile ? 300 : 400} /> */}
       <Group
         position={"apart"}
         align="flex-start"
-        mt="50px"
+        // mt="50px"
         style={{ width: "100%" }}
       >
         <Stack align="flex-start">

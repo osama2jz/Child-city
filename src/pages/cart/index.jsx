@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
   TextInput,
+  Textarea,
   Title,
   useMantineTheme,
 } from "@mantine/core";
@@ -139,10 +140,10 @@ const Cart = () => {
                 ]}
               />
               <TextInput placeholder="City" />
-              <TextInput placeholder="Zip Code" />
-              <TextInput placeholder="Address" />
+              <TextInput placeholder="Zip Code (Optional)" />
+              <Textarea placeholder="Address" />
             </Stack>
-            <Text fw={600}>Coupen Code</Text>
+            <Text fw={600}>Discount Coupen</Text>
             <Group position="apart">
               <TextInput placeholder="Code" w={120} />
               <Button label={"Apply"} compact={true} size="xs"/>
@@ -154,10 +155,10 @@ const Cart = () => {
               style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
               pb={20}
             >
-              1,747
+              1,747 <small>(Including Tax)</small>
             </Text>
           </SimpleGrid>
-          <Button label={"PROCEED TO CHECKOUT"} />
+          <Button label={"PROCEED TO PAY"} />
         </Stack>
       </Flex>
     </Box>

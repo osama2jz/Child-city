@@ -1,4 +1,15 @@
-import { Badge, Collapse, List, Stack, Text, Title } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Collapse,
+  Flex,
+  List,
+  Menu,
+  Select,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "tabler-icons-react";
@@ -22,12 +33,7 @@ const Filters = ({ showFilters }) => {
       <Title order={4} className={classes.cat}>
         Product Categories
       </Title>
-      <Text pos={"relative"}>
-        - Accessories{" "}
-        <Badge pos={"absolute"} right={10}>
-          5
-        </Badge>
-      </Text>
+
       <Text
         onClick={() => setOpen1(!open1)}
         style={{
@@ -38,13 +44,32 @@ const Filters = ({ showFilters }) => {
           position: "relative",
         }}
       >
-        - Boys Clothing {!open1 ? <ChevronDown /> : <ChevronUp />}
+        - Clothing {!open1 ? <ChevronDown /> : <ChevronUp />}
         <Badge pos={"absolute"} right={10}>
           5
         </Badge>
       </Text>
       <Collapse in={open1}>
-        <List listStyleType="none" withPadding>
+        <Stack w={"80%"} align="center">
+          <Select data={["Boys", "Girls"]} placeholder="Gender" />
+          <Select
+            data={["Kamez Shalwar", "Western"]}
+            placeholder="Dress Category"
+          />
+          <Select
+            data={[
+              { value: "1-2Y", label: "1-4Y", group: "Winter Collection" },
+              { value: "2-3Y", label: "3-9Y", group: "Winter Collection" },
+              { value: "3-4Y", label: "1-2Y", group: "Summer Collection" },
+              { value: "4-6Y", label: "2-3Y", group: "Summer Collection" },
+              { value: "6-9Y", label: "3-4Y", group: "Summer Collection" },
+              { value: "3-6M", label: "3-6M", group: "Summer Collection" },
+              { value: "6-9M", label: "6-9M", group: "Summer Collection" },
+            ]}
+            placeholder="Dress Size"
+          />
+        </Stack>
+        {/* <List listStyleType="none" withPadding>
           <List.Item pos={"relative"}>
             - Pre Winter{" "}
             <Badge pos={"absolute"} right={10}>
@@ -109,9 +134,9 @@ const Filters = ({ showFilters }) => {
               5
             </Badge>
           </List.Item>
-        </List>
+        </List> */}
       </Collapse>
-      <Text
+      {/* <Text
         onClick={() => setOpen2(!open2)}
         style={{
           display: "flex",
@@ -187,9 +212,15 @@ const Filters = ({ showFilters }) => {
             </List.Item>
           </List>
         </List>
-      </Collapse>
-      <Text pos={"relative"}>
+      </Collapse> */}
+      {/* <Text pos={"relative"}>
         - New Born Clothing{" "}
+        <Badge pos={"absolute"} right={10}>
+          5
+        </Badge>
+      </Text> */}
+      <Text pos={"relative"}>
+        - Accessories{" "}
         <Badge pos={"absolute"} right={10}>
           5
         </Badge>

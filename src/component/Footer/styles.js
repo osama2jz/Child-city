@@ -7,7 +7,7 @@ export const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
-    padding: "100px 150px",
+    padding: "50px 150px 200px",
     backgroundRepeat: "no-repeat",
     backgroundSize: "100%",
     backgroundPosition: "bottom center",
