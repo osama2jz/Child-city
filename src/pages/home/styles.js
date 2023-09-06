@@ -83,7 +83,7 @@ export const useStyles = createStyles((theme) => ({
   wave: {
     position: "absolute",
     bottom: 0,
-    animation: `${rightToLeft} 10s linear infinite`,
+    // animation: `${rightToLeft} 10s linear infinite`,
     backgroundRepeat: "repeat",
     // [`@media (max-width: 1100px)`]: {
     //   bottom: -35,
@@ -93,7 +93,7 @@ export const useStyles = createStyles((theme) => ({
     position: "absolute",
     bottom: 0,
     opacity: 0.7,
-    animation: `${rightToLeft} 15s linear infinite`,
+    // animation: `${rightToLeft} 15s linear infinite`,
     backgroundRepeat: "repeat",
     // [`@media (max-width: 1100px)`]: {
     //   bottom: -35,

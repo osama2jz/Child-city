@@ -309,7 +309,10 @@ const Header = ({ opened, toggle }) => {
             size={"md"}
             style={{ display: "flex", alignItems: "center" }}
           >
-            <Heart className={classes.iconS} />
+            <Heart
+              className={classes.iconS}
+              onClick={() => navigate("/wishlist")}
+            />
           </Indicator>
           <Indicator
             color="pink"
@@ -317,7 +320,10 @@ const Header = ({ opened, toggle }) => {
             label={"0"}
             style={{ display: "flex", alignItems: "center" }}
           >
-            <ShoppingBag className={classes.iconS} />
+            <ShoppingBag
+              className={classes.iconS}
+              onClick={() => navigate("/cart")}
+            />
           </Indicator>
           <Search className={classes.iconS} />
         </Flex>

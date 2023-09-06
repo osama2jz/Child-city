@@ -7,7 +7,7 @@ const CategoryCard = ({ img, title1, title2, text, to }) => {
   const { classes } = useStyles();
   const navigate=useNavigate()
   return (
-    <Box className={classes.card} onClick={()=>navigate(to)}>
+    <Box className={classes.card} onClick={()=>navigate("/product-category"+to)}>
       <Box className={classes.border}></Box>
       <img src={img} />
       <Stack ml="20px" mb="20px" spacing={0}>

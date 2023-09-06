@@ -21,9 +21,11 @@ import ProductCard from "../../component/ProductCard";
 import wave1 from "../../assets/wave-top.png";
 import wave2 from "../../assets/wave-mid.png";
 import wave3 from "../../assets/wave-bot.png";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { classes } = useStyles();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 1100px)");
   return (
     <Box>
@@ -33,8 +35,15 @@ const Home = () => {
         </Title>
         <Title order={3}>Like a Superstar</Title>
         <Group mt="xl">
-          <Button label={"Shop Girls"} />
-          <Button label={"Shop Boys"} color="blue" />
+          <Button
+            label={"Shop Girls"}
+            onClick={() => navigate("/product-category/Girls Clothing")}
+          />
+          <Button
+            label={"Shop Boys"}
+            color="blue"
+            onClick={() => navigate("/product-category/Boys Clothing")}
+          />
         </Group>
         <Image src={wave1} className={classes.wave} />
         <Image src={wave2} className={classes.wave2} />
@@ -46,18 +55,21 @@ const Home = () => {
           title1={"Girls"}
           title2={"Clothing"}
           text={"World's Best Brands"}
+          to="/Girls Clothing"
         />
         <CategoryCard
           img={boys}
           title1={"Boys"}
           title2={"Clothing"}
           text={"Incredible Quality"}
+          to="/Boys Clothing"
         />
         <CategoryCard
           img={toys}
           title1={"Toys"}
           title2={"& Games"}
           text={"For all ages"}
+          to="/Toys & Games"
         />
       </Group>
       <Stack align="center">
@@ -80,7 +92,11 @@ const Home = () => {
         <ProductCard />
       </Group>
       <Center mb="50px">
-        <Button label={"Shop All Products"} color="blue" />
+        <Button
+          label={"Shop All Products"}
+          color="blue"
+          onClick={() => navigate("/product-category")}
+        />
       </Center>
       <Flex direction={{ lg: "row", base: "column" }} mb="xl">
         <Box className={classes.dark}>

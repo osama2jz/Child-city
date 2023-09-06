@@ -7,6 +7,9 @@ import Footer from "./component/Footer";
 import { Box } from "@mantine/core";
 import Home from "./pages/home";
 import Inventory from "./pages/Inventory";
+import Wishlist from "./pages/wishlist";
+import ViewProduct from "./pages/viewProduct";
+import Cart from "./pages/cart";
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure(false);
@@ -28,6 +31,9 @@ const App = () => {
           path="/product-category/:cat/:subCat?/:size?"
           element={<Inventory />}
         />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/product/:title" element={<ViewProduct />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
       <Footer />
     </Box>

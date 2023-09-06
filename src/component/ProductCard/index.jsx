@@ -11,10 +11,11 @@ import React, { useState } from "react";
 import logo from "../../assets/example.jpg";
 import { useStyles } from "./styles";
 import { CreditCard, Heart, ShoppingBag } from "tabler-icons-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductCard = ({}) => {
   const theme = useMantineTheme();
+  const navigate = useNavigate();
   const location = useLocation().pathname;
   const [show, setShow] = useState(false);
   const { classes } = useStyles({ show });
@@ -23,6 +24,7 @@ const ProductCard = ({}) => {
       className={classes.main}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
+      onClick={() => navigate("/product/idhere")}
     >
       <Image
         src={logo}
@@ -43,7 +45,7 @@ const ProductCard = ({}) => {
         <Tooltip label="Add to Cart">
           <ShoppingBag size={30} className={classes.icon} />
         </Tooltip>
-        <CreditCard size={30} className={classes.icon} />
+        {/* <CreditCard size={30} className={classes.icon} /> */}
         <Heart size={30} className={classes.icon} />
       </Group>
     </Box>

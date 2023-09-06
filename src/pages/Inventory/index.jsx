@@ -1,31 +1,62 @@
 import {
   Box,
-  Collapse,
   Group,
-  List,
+  Pagination,
   RangeSlider,
   Select,
-  Stack,
   Text,
   Title,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { ChevronDown, ChevronUp } from "tabler-icons-react";
-import { useStyles } from "./styles";
-import ProductCard from "../../component/ProductCard";
-import Button from "../../component/Button";
 import { useMediaQuery } from "@mantine/hooks";
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import Button from "../../component/Button";
+import ProductCard from "../../component/ProductCard";
+import Filters from "./Filters";
+import { useStyles } from "./styles";
 
 const Inventory = () => {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const { cat, subCat, size } = useParams();
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
+  const [toShow, setToShow] = useState(12);
+  const [data, setData] = useState([
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+  ]);
   const [price, setPrice] = useState([0, 1500]);
   const [showFilters, setShowFilters] = useState(true);
+  const [activePage, setPage] = useState(1);
+
+  const totalPages = useMemo(() => {
+    if (toShow === "Show All") return 1;
+    let total = data.length / toShow;
+    return Math.ceil(total);
+  }, [data, toShow]);
+
+  const filtered = () => {
+    if (totalPages === 1) {
+      return data;
+    } else {
+      let startIndex = (activePage - 1) * toShow;
+      let endIndex = startIndex + toShow;
+      return data.slice(startIndex, endIndex);
+    }
+  };
   return (
     <Box>
       <Box className={classes.main}>
@@ -47,81 +78,7 @@ const Inventory = () => {
             onClick={() => setShowFilters(!showFilters)}
           />
         )}
-        {
-          <Stack
-            w={isMobile ? "100%" : "20%"}
-            spacing={"xs"}
-            style={{
-              height: showFilters ? "100%" : "0px",
-              overflow: "hidden",
-              transition: "all 0.5s ease-in-out",
-            }}
-          >
-            <Title order={4} className={classes.cat}>
-              Product Categories
-            </Title>
-            <Text>- Accessories</Text>
-            <Text
-              onClick={() => setOpen1(!open1)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                cursor: "pointer",
-              }}
-            >
-              - Boys Clothing {!open1 ? <ChevronDown /> : <ChevronUp />}
-            </Text>
-            <Collapse in={open1}>
-              <List listStyleType="none" withPadding>
-                <List.Item>- Pre Winter</List.Item>
-                <List withPadding listStyleType="none">
-                  <List.Item>- 1-4Y</List.Item>
-                  <List.Item>- 3-9Y</List.Item>
-                </List>
-                <List.Item>- Summer Collection</List.Item>
-                <List withPadding listStyleType="none">
-                  <List.Item>- 1-2Y</List.Item>
-                  <List.Item>- 2-3Y</List.Item>
-                  <List.Item>- 3-4Y</List.Item>
-                  <List.Item>- 3-6M</List.Item>
-                  <List.Item>- 6-9M</List.Item>
-                </List>
-                <List.Item>- Traditional</List.Item>
-              </List>
-            </Collapse>
-            <Text
-              onClick={() => setOpen2(!open2)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                cursor: "pointer",
-              }}
-            >
-              - Girls Clothing {!open2 ? <ChevronDown /> : <ChevronUp />}
-            </Text>
-            <Collapse in={open2}>
-              <List listStyleType="none" withPadding>
-                <List.Item>- Pre Winter</List.Item>
-                <List withPadding listStyleType="none">
-                  <List.Item>- 1-4Y</List.Item>
-                  <List.Item>- 3-9Y</List.Item>
-                </List>
-                <List.Item>- Summer Collection</List.Item>
-                <List withPadding listStyleType="none">
-                  <List.Item>- 1-2Y</List.Item>
-                  <List.Item>- 2-3Y</List.Item>
-                  <List.Item>- 3-4Y</List.Item>
-                  <List.Item>- 3-6M</List.Item>
-                  <List.Item>- 6-9M</List.Item>
-                </List>
-              </List>
-            </Collapse>
-            <Text>- New Born Clothing</Text>
-            <Text>- Toys & Games</Text>
-          </Stack>
-        }
+        <Filters showFilters={showFilters} />
         <Box w={isMobile ? "100%" : "80%"} p="lg">
           <Group position="apart" mb="lg">
             <Box>
@@ -147,29 +104,36 @@ const Inventory = () => {
                   "Low To High",
                   "High To Low",
                 ]}
+                color="red"
                 label="Sort By"
-                w={150}
+                w={155}
                 defaultValue={"Default"}
               />
               <Select
                 data={["12", "24", "48", "96", "Show All"]}
                 w={100}
+                onChange={setToShow}
                 label="Show"
                 defaultValue={"12"}
               />
             </Group>
           </Group>
           <Group position="center" spacing={"lg"}>
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            {filtered().map((obj, ind) => (
+              <ProductCard />
+            ))}
           </Group>
+          {totalPages > 1 && (
+            <Pagination
+              mt="lg"
+              position="center"
+              total={totalPages}
+              value={activePage}
+              onChange={setPage}
+              color={"blue"}
+              radius={"lg"}
+            />
+          )}
         </Box>
       </Box>
     </Box>
