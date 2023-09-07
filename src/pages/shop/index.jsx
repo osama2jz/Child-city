@@ -14,11 +14,11 @@ const Shop = () => {
     <Box>
       <Box className={classes.main}>
         <Title align="center" color="rgb(0,0,0,0.8)">
-          BabyStreet Shop
+          Baby Shop
         </Title>
       </Box>
 
-      <Group position="center" my="50px" spacing={'30px'}>
+      <Group position="center" my="50px" spacing={"30px"}>
         <CategoryCard
           img={boys}
           title1={"Boys"}
