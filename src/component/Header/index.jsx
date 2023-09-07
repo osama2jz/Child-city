@@ -67,7 +67,7 @@ const Header = ({ opened, toggle }) => {
         style={{
           display: "flex",
           justifyContent: "space-around",
-          backgroundColor: theme.colors.primary,
+          backgroundColor: theme.colors.primary[0],
           color: "white",
           alignItems: "center",
           flexWrap: "wrap",
@@ -86,7 +86,7 @@ const Header = ({ opened, toggle }) => {
             <Phone />
             <Text fz={isMobile ? "xs" : "md"} fw="bold">
               {" "}
-              +92 300 7171197
+              +92-336-7866668
             </Text>
           </Flex>
         </Flex>

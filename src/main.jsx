@@ -14,7 +14,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         theme={{
           fontFamily: "Poppins, sans-serif",
           colors: {
-            primary: ["#81d1e5"],
+            primary: [
+              "#81d1e5",
+              "#81d1e5",
+              "#81d1e5",
+              "#81d1e5",
+              "#81d1e5",
+              "#81d1e5",
+              "#81d1e5",
+            ],
           },
           primaryColor: "primary",
           globalStyles: (theme) => ({

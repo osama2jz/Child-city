@@ -65,9 +65,6 @@ export const useStyles = createStyles((theme) => ({
   },
   border: {
     position: "absolute",
-    // width: "90%",
-    // height: "90%",
-    // margin: "10px",
     top: 10,
     bottom: 10,
     left: 10,
@@ -81,9 +78,6 @@ export const useStyles = createStyles((theme) => ({
     bottom: 0,
     // animation: `${rightToLeft} 10s linear infinite`,
     backgroundRepeat: "repeat",
-    // [`@media (max-width: 1100px)`]: {
-    //   bottom: -35,
-    // },
   },
   wave2: {
     position: "absolute",
@@ -91,16 +85,10 @@ export const useStyles = createStyles((theme) => ({
     opacity: 0.7,
     // animation: `${rightToLeft} 15s linear infinite`,
     backgroundRepeat: "repeat",
-    // [`@media (max-width: 1100px)`]: {
-    //   bottom: -35,
-    // },
   },
   wave1: {
     position: "absolute",
     bottom: 0,
     opacity: 0.5,
-    // [`@media (max-width: 1100px)`]: {
-    //   bottom: -35,
-    // },
   },
 }));

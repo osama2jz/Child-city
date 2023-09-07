@@ -3,9 +3,11 @@ import { useStyles } from "./styles";
 import logo from "../../assets/logo.png";
 import { ClockHour3, Mail, MapPin, Phone } from "tabler-icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const { classes } = useStyles();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 1100px)");
 
   return (
@@ -21,11 +23,19 @@ const Footer = () => {
           <Text fw="600" fz={isMobile ? "md" : "lg"}>
             Information
           </Text>
-          <Text className={classes.item}>About Us</Text>
-          <Text className={classes.item}>Contact Us</Text>
+          <Text className={classes.item} onClick={() => navigate("/about-us")}>
+            About Us
+          </Text>
+          <Text className={classes.item} onClick={() => navigate("/contacts")}>
+            Contact Us
+          </Text>
           <Text className={classes.item}>FAQ</Text>
-          <Text className={classes.item}>BabyStreet Shop</Text>
-          <Text className={classes.item}>Blog</Text>
+          <Text className={classes.item} onClick={() => navigate("/shop")}>
+            BabyStreet Shop
+          </Text>
+          <Text className={classes.item} onClick={() => navigate("/blog")}>
+            Blog
+          </Text>
         </Stack>
         <Stack align="flex-start" fz={isMobile ? "md" : "lg"}>
           <Text fw="600">Extras</Text>

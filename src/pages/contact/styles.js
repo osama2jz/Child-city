@@ -6,10 +6,9 @@ export const useStyles = createStyles((theme) => ({
     backgroundImage: `url(${inventory})`,
     padding: "100px",
   },
-  details: {
-    backgroundColor: "rgb(0,0,0,0.05)",
+  contact: {
+    border: "2px dashed rgb(0,0,0,0.1)",
     borderRadius: "10px",
-    padding: "50px",
-    marginInline: "20px",
+    padding:'20px',
   },
 }));

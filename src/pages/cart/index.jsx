@@ -1,9 +1,11 @@
 import {
   Box,
+  FileInput,
   Flex,
   Group,
   Image,
   NumberInput,
+  Radio,
   Select,
   SimpleGrid,
   Stack,
@@ -16,7 +18,7 @@ import {
 import React, { useState } from "react";
 import logo from "../../assets/example.jpg";
 import { useStyles } from "./styles";
-import { Trash } from "tabler-icons-react";
+import { File, Trash, Upload } from "tabler-icons-react";
 import Button from "../../component/Button";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -24,6 +26,7 @@ const Cart = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
+  const [paymentMode, setPaymentMode] = useState("cod");
   const [wishlist, setWishlist] = useState([
     {
       img: logo,
@@ -101,7 +104,7 @@ const Cart = () => {
             </Flex>
           ))}
         </Stack>
-        <Stack className={classes.details}>
+        <Stack className={classes.details} w={isMobile ? "100%" : "35%"}>
           <Text
             fw={500}
             style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
@@ -146,7 +149,7 @@ const Cart = () => {
             <Text fw={600}>Discount Coupen</Text>
             <Group position="apart">
               <TextInput placeholder="Code" w={120} />
-              <Button label={"Apply"} compact={true} size="xs"/>
+              <Button label={"Apply"} compact={true} size="xs" />
             </Group>
             <Text fw={600}>Total</Text>
             <Text
@@ -157,7 +160,32 @@ const Cart = () => {
             >
               1,747 <small>(Including Tax)</small>
             </Text>
+            <Text fw={600}>Payment Mode</Text>
+            <Radio.Group defaultValue={paymentMode} onChange={setPaymentMode}>
+              <Stack spacing={"xs"}>
+                <Radio value="cod" label="Cash On Delivery" />
+                <Radio value="easypaisa" label="Easypaisa" />
+                <Radio value="jazzcash" label="Jazzcash" />
+              </Stack>
+            </Radio.Group>
           </SimpleGrid>
+          {paymentMode !== "cod" && (
+            <Box>
+              <Text fz="sm">
+                Please transfer the amount on the account number (03367866668)
+                and upload screenshot.
+              </Text>
+              <FileInput
+                placeholder="Upload Screenshot"
+                w={"175px"}
+                icon={<Upload color="gray" />}
+                radius={"30px"}
+                variant="filled"
+                style={{ border: "1px dashed gray", borderRadius: "30px", margin:'auto' }}
+              />
+            </Box>
+          )}
+
           <Button label={"PROCEED TO PAY"} />
         </Stack>
       </Flex>
