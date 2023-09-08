@@ -48,12 +48,12 @@ const Home = () => {
             <Group mt="xl">
               <Button
                 label={"Shop Girls"}
-                onClick={() => navigate("/product-category/Girls Clothing")}
+                onClick={() => navigate("/product-category/Clothing/Girls")}
               />
               <Button
                 label={"Shop Boys"}
                 color="blue"
-                onClick={() => navigate("/product-category/Boys Clothing")}
+                onClick={() => navigate("/product-category/Clothing/Boys")}
               />
             </Group>
             <Image src={wave1} className={classes.wave} />

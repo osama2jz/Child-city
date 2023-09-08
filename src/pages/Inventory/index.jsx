@@ -79,7 +79,7 @@ const Inventory = () => {
     {},
     {},
   ]);
-  const [price, setPrice] = useState([0, 1500]);
+  const [price, setPrice] = useState([0, 5000]);
   const [showFilters, setShowFilters] = useState(true);
   const [activePage, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -89,57 +89,72 @@ const Inventory = () => {
   const [selectedType, setSelectedtType] = useState("");
 
   useEffect(() => {
+    document.title = cat;
+
+    return () => {
+      document.title = "Child City";
+    };
+  }, [cat]);
+
+  useEffect(() => {
     setSelectedCategory(cat);
-    setSelectedGender(gender)
+    setSelectedGender(gender);
   }, [cat, gender]);
   let totalPages = 0;
-  const paginated = useCallback(() => {
-    if (totalPages === 1) {
-      return data;
-    } else {
-      let startIndex = (activePage - 1) * toShow;
-      let endIndex = startIndex + toShow;
-      return data.slice(startIndex, endIndex);
-    }
-  }, [activePage, data, toShow]);
 
   const filtered = useCallback(() => {
     if (
       selectedCategory === "Accessories" ||
       selectedCategory === "Toys & Games"
     ) {
-      return paginated().filter(
-        (obj, ind) => obj.category === selectedCategory
+      console.log("here");
+      return data.filter(
+        (obj, ind) =>
+          obj.category === selectedCategory &&
+          obj?.price >= price[0] &&
+          obj?.price <= price[1]
       );
     } else if (selectedCategory === "Clothing") {
-      return paginated().filter((obj) => {
+      return data.filter((obj) => {
         return (
           obj?.category === selectedCategory &&
           obj?.size?.join(",").includes(selectedAge) &&
           obj?.gender.includes(selectedGender) &&
           obj?.season.includes(selectedSeason) &&
-          obj?.type.includes(selectedType)
+          obj?.type.includes(selectedType) &&
+          obj.price >= price[0] &&
+          obj.price <= price[1]
         );
       });
     } else {
-      return paginated();
+      return data.filter(
+        (obj) => obj.price >= price[0] && obj.price <= price[1]
+      );
     }
   }, [
-    paginated,
-    selectedGender,
-    selectedAge,
     selectedCategory,
+    data,
+    price,
+    selectedAge,
+    selectedGender,
     selectedSeason,
     selectedType,
   ]);
+  const paginated = useCallback(() => {
+    if (totalPages === 1) {
+      return filtered();
+    } else {
+      let startIndex = (activePage - 1) * toShow;
+      let endIndex = startIndex + toShow;
+      return filtered().slice(startIndex, endIndex);
+    }
+  }, [activePage, filtered, toShow, totalPages]);
 
   totalPages = useMemo(() => {
     if (toShow === "Show All") return 1;
     let total = filtered()?.length / toShow;
     return Math.ceil(total);
   }, [filtered, toShow]);
-
-  console.log(filtered());
   return (
     <Box>
       <Box className={classes.main}>
@@ -210,7 +225,7 @@ const Inventory = () => {
             </Group>
           </Group>
           <Group position="center" spacing={"lg"}>
-            {filtered()?.map((obj, ind) => (
+            {paginated()?.map((obj, ind) => (
               <ProductCard key={ind} data={obj} />
             ))}
           </Group>

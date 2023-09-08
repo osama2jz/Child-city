@@ -89,15 +89,25 @@ const Header = ({ opened, toggle }) => {
           </Text>
           <BrandFacebook
             className={classes.icon}
-            onClick={() => window.open("", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://www.facebook.com/Childcity.shop?mibextid=ZbWKwL",
+                "_blank"
+              )
+            }
           />
           <BrandInstagram
             className={classes.icon}
-            onClick={() => window.open("", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://instagram.com/childcity.shop?igshid=MzRlODBiNWFlZA==",
+                "_blank"
+              )
+            }
           />
           <BrandYoutube
             className={classes.icon}
-            onClick={() => window.open("", "_blank")}
+            onClick={() => window.open("www.youtube.com", "_blank")}
           />
         </Flex>
       </Box>

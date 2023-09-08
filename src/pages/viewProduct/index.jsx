@@ -13,7 +13,7 @@ import {
   Text,
   Title,
   rem,
-  useMantineTheme
+  useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useState } from "react";
@@ -38,6 +38,7 @@ const ViewProduct = () => {
   };
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   return (
     <Box>
       <Flex
@@ -54,7 +55,7 @@ const ViewProduct = () => {
             w={isMobile ? 350 : 500}
             withIndicators
             slidesToScroll={1}
-            slideSize={'100%'}
+            slideSize={"100%"}
             height={isMobile ? 350 : 500}
             styles={{
               indicator: {
@@ -72,11 +73,7 @@ const ViewProduct = () => {
                 key={ind}
                 style={{ display: "flex", justifyContent: "center" }}
               >
-                <Image
-                  src={img}
-                  width={'100%'}
-                  fit="cover"
-                />
+                <Image src={img} width={"100%"} fit="cover" />
               </Carousel.Slide>
             ))}
           </Carousel>
@@ -130,8 +127,16 @@ const ViewProduct = () => {
             </Text>
           </Group>
           <Group>
-            <NumberInput w={70} value={1} />
-            <Button label={"Add to Cart"} />
+            <NumberInput
+              w={70}
+              value={selectedQuantity}
+              min={0}
+              onChange={(e) => setSelectedQuantity(e)}
+            />
+            <Button
+              label={"Add to Cart"}
+              disabled={!selectedColor || !selectedSize || selectedQuantity < 1}
+            />
           </Group>
           <Text style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Heart /> Add to Wishlist

@@ -39,8 +39,7 @@ const Footer = () => {
         </Stack>
         <Stack align="flex-start" fz={isMobile ? "md" : "lg"}>
           <Text fw="600">Extras</Text>
-          <Text className={classes.item}>Wishlist</Text>
-          <Text className={classes.item}>Order Tracking</Text>
+          <Text className={classes.item} onClick={()=>navigate('/wishlist')}>Wishlist</Text>
           <Text className={classes.item}>Terms & Conditions</Text>
           <Text className={classes.item}>Privacy Policy</Text>
         </Stack>
@@ -63,10 +62,10 @@ const Footer = () => {
         </Stack>
         <Stack align="flex-start" fz={isMobile ? "md" : "lg"}>
           <Text fw="600">Payment Options</Text>
-          <Text className={classes.item}>Cash On Delivery</Text>
-          <Text className={classes.item}>Jazzcash</Text>
-          <Text className={classes.item}>Easypaisa</Text>
-          <Text className={classes.item}>Bank Transfer</Text>
+          <Text className={classes.item2}>Cash On Delivery</Text>
+          <Text className={classes.item2}>Jazzcash</Text>
+          <Text className={classes.item2}>Easypaisa</Text>
+          <Text className={classes.item2}>Bank Transfer</Text>
         </Stack>
       </Group>
     </Box>
