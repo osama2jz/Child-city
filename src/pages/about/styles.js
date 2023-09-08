@@ -4,7 +4,7 @@ import inventory from "../../assets/inventory.jpg";
 export const useStyles = createStyles((theme) => ({
   main: {
     backgroundImage: `url(${inventory})`,
-    padding: "100px",
+    paddingBlock: "100px",
   },
   cardsMain: {
     backgroundColor: "#ebf7fa",

@@ -64,6 +64,9 @@ const Footer = () => {
         <Stack align="flex-start" fz={isMobile ? "md" : "lg"}>
           <Text fw="600">Payment Options</Text>
           <Text className={classes.item}>Cash On Delivery</Text>
+          <Text className={classes.item}>Jazzcash</Text>
+          <Text className={classes.item}>Easypaisa</Text>
+          <Text className={classes.item}>Bank Transfer</Text>
         </Stack>
       </Group>
     </Box>

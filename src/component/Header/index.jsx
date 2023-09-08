@@ -2,21 +2,21 @@ import {
   Box,
   Burger,
   CloseButton,
-  Divider,
   Flex,
   Indicator,
   Menu,
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import React, { useState } from "react";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   BrandFacebook,
   BrandInstagram,
   BrandYoutube,
   Heart,
+  Logout,
   Mail,
   Phone,
   Search,
@@ -25,44 +25,37 @@ import {
 } from "tabler-icons-react";
 import logo from "../../assets/logo.png";
 import { useStyles } from "./styles";
+import Signin from "../../pages/Signin";
+import { spotlight } from "@mantine/spotlight";
 
 const Header = ({ opened, toggle }) => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const { classes } = useStyles({ opened });
   const [show, setShow] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { classes } = useStyles({ opened, show });
   return (
     <>
-      <Flex
-        bg={"blue"}
-        style={{
-          color: "white",
-          display: show ? "flex" : "none",
-          // borderBottom: "1px dashed white",
-          position: "sticky",
-          top: 0,
-          zIndex: 999,
-        }}
-        justify={"center"}
-        py="xs"
-      >
-        <Text
-          fz={isMobile ? "8px" : "sm"}
-          align="center"
-          style={{ justifySelf: "flex-start" }}
-          mr={isMobile ? 30 : 0}
-          // w={isMobile ? "90%" : "100%"}
+      {show && (
+        <Flex
+          bg={"#ff8087"}
+          className={classes.delivery}
+          justify={"center"}
+          py="xs"
         >
-          Free Delivery Available Over 2999. Flat 50% Off on All Summer
-          Collection & Upto 20% Off on Pre Winter Collection.
-        </Text>
-        <CloseButton
-          variant={"light"}
-          onClick={() => setShow(false)}
-          style={{ position: "absolute", right: isMobile ? 10 : 50 }}
-        />
-      </Flex>
+          <marquee>
+            Free Delivery Available Over 2999. Flat 50% Off on All Summer
+            Collection & Upto 20% Off on Pre Winter Collection.
+          </marquee>
+          <CloseButton
+            variant={"light"}
+            onClick={() => setShow(false)}
+            style={{ position: "absolute", right: isMobile ? 10 : 50 }}
+          />
+        </Flex>
+      )}
       <Box
         style={{
           display: "flex",
@@ -79,7 +72,7 @@ const Header = ({ opened, toggle }) => {
           <Flex gap={"sm"}>
             <Mail />
             <Text fz={isMobile ? "xs" : "md"} fw="bold">
-              shop@childcity.shop,
+              shop@childcity.shop
             </Text>
           </Flex>
           <Flex gap="sm">
@@ -130,16 +123,23 @@ const Header = ({ opened, toggle }) => {
         <Flex gap={"lg"} align={"center"} className={classes.navigationBar}>
           <Link
             className={classes.link}
-            to="/product-category/New Born"
+            to="/shop"
+            onClick={() => isMobile && toggle()}
+          >
+            Shop All
+          </Link>
+          {/* <Link
+            className={classes.link}
+            to="/product-category/Clothing/New Born"
             onClick={() => isMobile && toggle()}
           >
             New Born
-          </Link>
+          </Link> */}
           <Menu trigger="hover">
             <Menu.Target>
               <Link
                 className={classes.link}
-                to="/product-category/Boys Clothing"
+                to="/product-category/Clothing/Boys"
               >
                 Boys Clothing
               </Link>
@@ -216,7 +216,7 @@ const Header = ({ opened, toggle }) => {
             <Menu.Target>
               <Link
                 className={classes.link}
-                to="/product-category/Girls Clothing"
+                to="/product-category/Clothing/Girls"
               >
                 Girls Clothing
               </Link>
@@ -298,11 +298,20 @@ const Header = ({ opened, toggle }) => {
           </Link>
           <Link
             className={classes.link}
-            to="/product-category/accessories"
+            to="/product-category/Accessories"
             onClick={() => isMobile && toggle()}
           >
             Accessories
           </Link>
+          {isLoggedIn && (
+            <Link
+              className={classes.link}
+              to="/my-dashboard"
+              onClick={() => isMobile && toggle()}
+            >
+              My Dashboard
+            </Link>
+          )}
         </Flex>
         <Flex
           gap="md"
@@ -310,8 +319,7 @@ const Header = ({ opened, toggle }) => {
           align={"center"}
           style={{ transform: isMobile ? "scale(0.8)" : "" }}
         >
-          <Search className={classes.iconS} />
-          <User className={classes.iconS} />
+          <Search className={classes.iconS} onClick={spotlight.open} />
           <Indicator
             color="pink"
             label={"0"}
@@ -334,10 +342,18 @@ const Header = ({ opened, toggle }) => {
               onClick={() => navigate("/cart")}
             />
           </Indicator>
+          {isLoggedIn ? (
+            <Logout
+              className={classes.iconS}
+              onClick={() => setIsLoggedIn(false)}
+            />
+          ) : (
+            <User className={classes.iconS} onClick={() => setOpen(true)} />
+          )}
         </Flex>
-
         {isMobile && <Burger opened={opened} onClick={toggle} color="black" />}
       </Box>
+      <Signin open={open} setOpen={setOpen} />
     </>
   );
 };

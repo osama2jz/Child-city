@@ -4,7 +4,7 @@ import inventory from "../../assets/inventory.jpg";
 export const useStyles = createStyles((theme) => ({
   main: {
     backgroundImage: `url(${inventory})`,
-    padding: "100px",
+    paddingBlock: "100px",
   },
   content: {
     padding: "4%",
@@ -18,7 +18,7 @@ export const useStyles = createStyles((theme) => ({
   cat: {
     backgroundColor: theme.colors.primary,
     padding: "10px",
-    margin:'5px',
+    margin: "5px",
     color: "white",
     border: "2px dashed white",
     borderRadius: "10px",

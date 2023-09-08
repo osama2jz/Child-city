@@ -21,6 +21,7 @@ export const useStyles = createStyles((theme) => ({
   item: {
     color: "rgb(0,0,0,0.7)",
     cursor: "pointer",
+    fontWeight:600,
     fontSize: 12,
   },
   item2: {

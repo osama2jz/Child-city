@@ -17,21 +17,20 @@ const Shop = () => {
           Baby Shop
         </Title>
       </Box>
-
       <Group position="center" my="50px" spacing={"30px"}>
         <CategoryCard
           img={boys}
           title1={"Boys"}
           title2={"Clothing"}
           text={"Incredible Quality"}
-          to="/Boys Clothing"
+          to="/Clothing/Boys"
         />
         <CategoryCard
           img={girls}
           title1={"Girls"}
           title2={"Clothing"}
           text={"World's Best Brands"}
-          to="/Girls Clothing"
+          to="/Clothing/Girls"
         />
         <CategoryCard
           img={toys}
@@ -52,7 +51,7 @@ const Shop = () => {
           title1={"New Born"}
           title2={"Babies"}
           text={"Cute Stuff"}
-          to="/New Born"
+          to="/Clothing/New Born"
         />
       </Group>
     </Box>

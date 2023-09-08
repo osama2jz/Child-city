@@ -9,7 +9,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "../../component/Button";
 import ProductCard from "../../component/ProductCard";
@@ -20,13 +20,54 @@ const Inventory = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
-  const { cat, subCat, size } = useParams();
+  const { cat, gender } = useParams();
   const [toShow, setToShow] = useState(12);
   const [data, setData] = useState([
-    {},
-    {},
-    {},
-    {},
+    {
+      category: "Clothing",
+      title: "This is a title",
+      gender: "Girls",
+      type: "Kamez Shalwar",
+      size: ["1-2Y", "2-3Y", "3-4Y", "3-6M"],
+      season: "summer",
+      price: 1999,
+      salePrice: 1500,
+    },
+    {
+      category: "Clothing",
+      title: "Some dress",
+      gender: "Boys",
+      type: "Western",
+      season: "winter",
+      size: ["1-2Y", "3-4Y", "3-6M"],
+      price: 1500,
+      salePrice: 900,
+    },
+    {
+      category: "Clothing",
+      gender: "Boys",
+      title: "Pretty dress",
+      type: "Western",
+      season: "summer",
+      size: ["1-2Y", "2-3Y", "3-4Y", "6-9M"],
+      price: 800,
+    },
+    {
+      category: "Clothing",
+      gender: "Girls",
+      title: "Pretty dress for girls",
+      type: "Kamez Shalwar",
+      season: "Winter Collection",
+      size: ["1-2Y", "2-3Y", "3-4Y", "6-9M"],
+      price: 800,
+    },
+    {
+      category: "Accessories",
+      title: "Pretty Socks",
+      season: "Winter Collection",
+      size: ["1-2Y", "2-3Y", "3-4Y", "6-9M"],
+      price: 800,
+    },
     {},
     {},
     {},
@@ -41,14 +82,18 @@ const Inventory = () => {
   const [price, setPrice] = useState([0, 1500]);
   const [showFilters, setShowFilters] = useState(true);
   const [activePage, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedAge, setSelectedAge] = useState("");
+  const [selectedSeason, setSeason] = useState("");
+  const [selectedType, setSelectedtType] = useState("");
 
-  const totalPages = useMemo(() => {
-    if (toShow === "Show All") return 1;
-    let total = data.length / toShow;
-    return Math.ceil(total);
-  }, [data, toShow]);
-
-  const filtered = () => {
+  useEffect(() => {
+    setSelectedCategory(cat);
+    setSelectedGender(gender)
+  }, [cat, gender]);
+  let totalPages = 0;
+  const paginated = useCallback(() => {
     if (totalPages === 1) {
       return data;
     } else {
@@ -56,18 +101,53 @@ const Inventory = () => {
       let endIndex = startIndex + toShow;
       return data.slice(startIndex, endIndex);
     }
-  };
+  }, [activePage, data, toShow]);
+
+  const filtered = useCallback(() => {
+    if (
+      selectedCategory === "Accessories" ||
+      selectedCategory === "Toys & Games"
+    ) {
+      return paginated().filter(
+        (obj, ind) => obj.category === selectedCategory
+      );
+    } else if (selectedCategory === "Clothing") {
+      return paginated().filter((obj) => {
+        return (
+          obj?.category === selectedCategory &&
+          obj?.size?.join(",").includes(selectedAge) &&
+          obj?.gender.includes(selectedGender) &&
+          obj?.season.includes(selectedSeason) &&
+          obj?.type.includes(selectedType)
+        );
+      });
+    } else {
+      return paginated();
+    }
+  }, [
+    paginated,
+    selectedGender,
+    selectedAge,
+    selectedCategory,
+    selectedSeason,
+    selectedType,
+  ]);
+
+  totalPages = useMemo(() => {
+    if (toShow === "Show All") return 1;
+    let total = filtered()?.length / toShow;
+    return Math.ceil(total);
+  }, [filtered, toShow]);
+
+  console.log(filtered());
   return (
     <Box>
       <Box className={classes.main}>
         <Title align="center" color="rgb(0,0,0,0.8)">
-          {cat.toUpperCase()}
+          {cat?.toUpperCase()}
         </Title>
         <Title align="center" color="gray" order={3}>
-          {subCat?.toUpperCase()}
-        </Title>
-        <Title align="center" color="gray" order={5}>
-          {size?.toUpperCase()}
+          {gender?.toUpperCase()}
         </Title>
       </Box>
       <Box className={classes.content}>
@@ -78,7 +158,19 @@ const Inventory = () => {
             onClick={() => setShowFilters(!showFilters)}
           />
         )}
-        <Filters showFilters={showFilters} />
+        <Filters
+          showFilters={showFilters}
+          setSelectedCategory={setSelectedCategory}
+          setSelectedGender={setSelectedGender}
+          setSeason={setSeason}
+          selectedGender={selectedGender}
+          setSelectedAge={setSelectedAge}
+          setSelectedtType={setSelectedtType}
+          selectedType={selectedType}
+          selectedAge={selectedAge}
+          data={data}
+          selectedCategory={selectedCategory}
+        />
         <Box w={isMobile ? "100%" : "80%"} p="lg">
           <Group position="apart" mb="lg">
             <Box>
@@ -88,7 +180,7 @@ const Inventory = () => {
               <RangeSlider
                 color={"blue"}
                 defaultValue={price}
-                max={3000}
+                max={5000}
                 w={isMobile ? 300 : 350}
                 // maw={}
                 onChange={(e) => setPrice(e)}
@@ -99,7 +191,6 @@ const Inventory = () => {
                 data={[
                   "Default",
                   "By Popularity",
-                  "By Average Rating",
                   "By Latest",
                   "Low To High",
                   "High To Low",
@@ -119,8 +210,8 @@ const Inventory = () => {
             </Group>
           </Group>
           <Group position="center" spacing={"lg"}>
-            {filtered().map((obj, ind) => (
-              <ProductCard />
+            {filtered()?.map((obj, ind) => (
+              <ProductCard key={ind} data={obj} />
             ))}
           </Group>
           {totalPages > 1 && (

@@ -43,10 +43,11 @@ const Button = ({
       onClick={onClick}
       style={{
         border: "2px dashed white",
-        boxShadow:
-          color === "pink"
-            ? "0px 0px 0px 5px #ff8087"
-            : `0px 0px 0px 5px ${theme.colors.primary}`,
+        boxShadow: disabled
+          ? "0px 0px 0px 5px #e9ecef"
+          : color === "pink"
+          ? "0px 0px 0px 5px #ff8087"
+          : `0px 0px 0px 5px ${theme.colors.primary[0]}`,
       }}
       {...props}
     >

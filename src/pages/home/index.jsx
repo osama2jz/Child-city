@@ -28,7 +28,7 @@ import { Carousel } from "@mantine/carousel";
 const Home = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  const theme=useMantineTheme()
+  const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
   return (
     <Box>
@@ -70,12 +70,12 @@ const Home = () => {
             <Group mt="xl">
               <Button
                 label={"Shop Girls"}
-                onClick={() => navigate("/product-category/Girls Clothing")}
+                onClick={() => navigate("/product-category/Clothing/Girls")}
               />
               <Button
                 label={"Shop Boys"}
                 color="blue"
-                onClick={() => navigate("/product-category/Boys Clothing")}
+                onClick={() => navigate("/product-category/Clothing/Boys")}
               />
             </Group>
             <Image src={wave1} className={classes.wave} />
@@ -83,28 +83,6 @@ const Home = () => {
             <Image src={wave3} className={classes.wave1} />
           </Box>
         </Carousel.Slide>
-        {/* <Carousel.Slide>
-          <Box className={classes.main}>
-            <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
-              Shine Bright
-            </Title>
-            <Title order={3}>Like a Superstar</Title>
-            <Group mt="xl">
-              <Button
-                label={"Shop Girls"}
-                onClick={() => navigate("/product-category/Girls Clothing")}
-              />
-              <Button
-                label={"Shop Boys"}
-                color="blue"
-                onClick={() => navigate("/product-category/Boys Clothing")}
-              />
-            </Group>
-            <Image src={wave1} className={classes.wave} />
-            <Image src={wave2} className={classes.wave2} />
-            <Image src={wave3} className={classes.wave1} />
-          </Box>
-        </Carousel.Slide> */}
       </Carousel>
 
       <Group position="center" spacing={"xl"} my="50px" mx="md">
@@ -113,14 +91,14 @@ const Home = () => {
           title1={"Boys"}
           title2={"Clothing"}
           text={"Incredible Quality"}
-          to="/Boys Clothing"
+          to="/Clothing/Boys"
         />
         <CategoryCard
           img={girls}
           title1={"Girls"}
           title2={"Clothing"}
           text={"World's Best Brands"}
-          to="/Girls Clothing"
+          to="/Clothing/Girls"
         />
         <CategoryCard
           img={toys}
@@ -129,6 +107,9 @@ const Home = () => {
           text={"For all ages"}
           to="/Toys & Games"
         />
+      </Group>
+      <Group position="center" my="md" onClick={() => navigate("/shop")}>
+        <Button label={"Shop All"} />
       </Group>
       <Stack align="center">
         <Title ff={"satisfy"} fz={60} color="rgb(0,0,0,0.7)">

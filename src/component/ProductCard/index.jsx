@@ -13,7 +13,7 @@ import { useStyles } from "./styles";
 import { CreditCard, Heart, ShoppingBag } from "tabler-icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const ProductCard = ({}) => {
+const ProductCard = ({ data }) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const location = useLocation().pathname;
@@ -34,12 +34,12 @@ const ProductCard = ({}) => {
       <Badge w={50} h={50} className={classes.badge}>
         NEW
       </Badge>
-      <Text>Turkish Style Romper Full Sleeves</Text>
+      <Text>{data?.title || "Title"}</Text>
       <Group>
         <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
-          Rs 2999
+          Rs {data?.price || "1999"}
         </Text>
-        <Text color={theme.colors.primary}>Rs 1999</Text>
+        <Text color={theme.colors.primary}>Rs {data?.salePrice || "900"}</Text>
       </Group>
       <Group className={classes.hover}>
         <Tooltip label="Add to Cart">

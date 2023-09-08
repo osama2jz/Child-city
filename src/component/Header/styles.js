@@ -1,5 +1,10 @@
-import { createStyles } from "@mantine/core";
-export const useStyles = createStyles((theme, { opened }) => ({
+import { createStyles, keyframes } from "@mantine/core";
+export const rightToLeft = keyframes({
+  from: { transform: "translateX(150%)" },
+  // "50%": { transform: "translateX(-80%) translateZ(0) scaleX(0)" },
+  to: { transform: "translateX(-100%)" },
+});
+export const useStyles = createStyles((theme, { opened, show }) => ({
   logo: {
     color: "white",
     "&:hover": {
@@ -9,7 +14,7 @@ export const useStyles = createStyles((theme, { opened }) => ({
   link: {
     textDecoration: "none",
     color: "black",
-    fontWeight:500,
+    fontWeight: 500,
     [`@media (max-width: 1100px)`]: {
       color: "black",
     },
@@ -63,5 +68,12 @@ export const useStyles = createStyles((theme, { opened }) => ({
     ":hover": {
       stroke: "#ff52b5",
     },
+  },
+  delivery: {
+    color: "white",
+    // display: show ? "flex" : "hide",
+    position: "sticky",
+    top: 0,
+    zIndex: 999,
   },
 }));
