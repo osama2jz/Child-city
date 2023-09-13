@@ -6,6 +6,7 @@ export const useStyles = createStyles((theme, { show }) => ({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+    height:300,
     cursor: "pointer",
     [`@media (max-width: 1100px)`]: {
       transform: "scale(0.9)",

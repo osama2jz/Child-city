@@ -35,10 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           }),
         }}
       >
-        <SpotlightProvider actions={[]}>
-
         <App />
-        </SpotlightProvider>
       </MantineProvider>
     </BrowserRouter>
   </React.StrictMode>

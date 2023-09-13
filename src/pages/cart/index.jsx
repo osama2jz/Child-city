@@ -166,13 +166,15 @@ const Cart = () => {
                 <Radio value="cod" label="Cash On Delivery" />
                 <Radio value="easypaisa" label="Easypaisa" />
                 <Radio value="jazzcash" label="Jazzcash" />
+                <Radio value="bank" label="Bank" />
               </Stack>
             </Radio.Group>
           </SimpleGrid>
           {paymentMode !== "cod" && (
             <Box>
-              <Text fz="sm">
-                Please transfer the amount on the account number (03367866668)
+              <Text fz="sm" align="center">
+                Please transfer the amount on the account number{" "}
+                {paymentMode === "bank" ? "(pk3242432432) " : "(03367866668)  "}
                 and upload screenshot.
               </Text>
               <FileInput
@@ -181,7 +183,11 @@ const Cart = () => {
                 icon={<Upload color="gray" />}
                 radius={"30px"}
                 variant="filled"
-                style={{ border: "1px dashed gray", borderRadius: "30px", margin:'auto' }}
+                style={{
+                  border: "1px dashed gray",
+                  borderRadius: "30px",
+                  margin: "auto",
+                }}
               />
             </Box>
           )}

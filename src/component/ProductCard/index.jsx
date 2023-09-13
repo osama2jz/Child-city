@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import logo from "../../assets/example.jpg";
 import { useStyles } from "./styles";
-import { CreditCard, Heart, ShoppingBag } from "tabler-icons-react";
+import { Heart, ShoppingBag } from "tabler-icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ data }) => {
@@ -31,15 +31,24 @@ const ProductCard = ({ data }) => {
         width={location === "/" ? 300 : 250}
         height={location === "/" ? 300 : 250}
       />
-      <Badge w={50} h={50} className={classes.badge}>
-        NEW
+      <Badge
+        w={50}
+        h={50}
+        className={classes.badge}
+        bg={data?.salePrice ? theme.colors.primary[0] : "pink"}
+      >
+        {data?.salePrice ? "SALE" : "NEW"}
       </Badge>
       <Text>{data?.title || "Title"}</Text>
       <Group>
-        <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
-          Rs {data?.price || "1999"}
+        {data?.salePrice && (
+          <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
+            Rs {data?.price || "1999"}
+          </Text>
+        )}
+        <Text color={theme.colors.primary}>
+          Rs {data?.salePrice || data?.price}
         </Text>
-        <Text color={theme.colors.primary}>Rs {data?.salePrice || "900"}</Text>
       </Group>
       <Group className={classes.hover}>
         <Tooltip label="Add to Cart">

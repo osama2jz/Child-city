@@ -73,7 +73,7 @@ const Filters = ({
           <Select
             onChange={setSelectedGender}
             value={selectedGender}
-            data={[{ label: "All", value: "" }, "Boys", "Girls"]}
+            data={[{ label: "All", value: "" }, "Boys", "Girls", "New Born"]}
             placeholder="Gender"
           />
           <Select

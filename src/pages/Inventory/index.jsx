@@ -1,9 +1,11 @@
 import {
   Box,
   Group,
+  Image,
   Pagination,
   RangeSlider,
   Select,
+  Stack,
   Text,
   Title,
   useMantineTheme,
@@ -12,6 +14,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "../../component/Button";
+import logo from "../../assets/logo.png";
 import ProductCard from "../../component/ProductCard";
 import Filters from "./Filters";
 import { useStyles } from "./styles";
@@ -225,9 +228,16 @@ const Inventory = () => {
             </Group>
           </Group>
           <Group position="center" spacing={"lg"}>
-            {paginated()?.map((obj, ind) => (
-              <ProductCard key={ind} data={obj} />
-            ))}
+            {paginated().length > 0 ? (
+              paginated()?.map((obj, ind) => (
+                <ProductCard key={ind} data={obj} />
+              ))
+            ) : (
+              <Stack align="center" opacity={0.4}>
+                <Image src={logo} width="200px" />
+                <Title order={4} color={"gray"}>No Product Found</Title>
+              </Stack>
+            )}
           </Group>
           {totalPages > 1 && (
             <Pagination

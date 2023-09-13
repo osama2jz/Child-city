@@ -20,6 +20,7 @@ import { useState } from "react";
 import { Heart } from "tabler-icons-react";
 import pic from "../../assets/example.jpg";
 import Button from "../../component/Button";
+import SimilarProduct from "../../component/SimilarProducts";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
@@ -180,6 +181,8 @@ const ViewProduct = () => {
           <Reviews />
         </Tabs.Panel>
       </Tabs> */}
+
+      <SimilarProduct />
     </Box>
   );
 };
