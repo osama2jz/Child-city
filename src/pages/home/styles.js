@@ -8,7 +8,6 @@ export const rightToLeft = keyframes({
 });
 export const useStyles = createStyles((theme) => ({
   main: {
-    backgroundImage: `url(${home})`,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -17,11 +16,11 @@ export const useStyles = createStyles((theme) => ({
     width: "100%",
     height: "550px",
     position: "relative",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "top center",
-    [`@media (max-width: 1100px)`]: {
-      backgroundSize: "1100px 600px",
-    },
+  },
+  buttons: {
+    zIndex: 99,
+    position:'absolute',
+
   },
   card: {
     position: "relative",

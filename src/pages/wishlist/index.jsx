@@ -1,5 +1,6 @@
 import {
   Box,
+  Center,
   Flex,
   Group,
   Image,
@@ -9,46 +10,27 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import React, { useState } from "react";
-import logo from "../../assets/example.jpg";
+import logo from "../../assets/logo.png";
 import { useStyles } from "./styles";
 import { Trash } from "tabler-icons-react";
+import toast from "react-hot-toast";
+import Button from "../../component/Button";
+import { useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
-  const [wishlist, setWishlist] = useState([
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-  ]);
+  const navigate = useNavigate();
 
-  const handleRemove = (key) => {
-    setWishlist(wishlist.filter((obj, ind) => ind !== key));
+  const [wishlistFromLocal, setWishlistFromLocal] = useState(
+    JSON.parse(localStorage.getItem("wishlist")) ?? []
+  );
+  const handleRemove = (data) => {
+    let removed = wishlistFromLocal.filter((obj) => obj?._id !== data?._id);
+    localStorage.setItem("wishlist", JSON.stringify(removed));
+    setWishlistFromLocal(removed);
+    toast.success("Removed from Wishlist!");
+    return;
   };
   return (
     <Box>
@@ -57,35 +39,57 @@ const Wishlist = () => {
           My Wishlist
         </Title>
       </Box>
-      <Stack my="100px" style={{ overflowX: "scroll" }}>
-        {wishlist.map((obj, ind) => (
-          <Flex
-            key={ind}
-            align={"center"}
-            justify={"space-around"}
-            py="md"
-            miw={500}
-            bg={ind % 2 == 0 ? "" : "rgb(0,0,0,0.05)"}
-          >
-            <Image src={obj.img} width={100} withPlaceholder />
-            <Title color={theme.colors.primary} order={4}>
-              {obj?.title}
+      <Stack
+        my="100px"
+        mx="2%"
+        style={{
+          overflowX: "scroll",
+          border: wishlistFromLocal.length > 0 && "2px dashed rgb(0,0,0,0.1)",
+          borderRadius: "10px",
+        }}
+      >
+        {wishlistFromLocal.length > 0 ? (
+          wishlistFromLocal.map((obj, ind) => (
+            <Flex
+              key={ind}
+              align={"center"}
+              justify={"space-around"}
+              py="md"
+              miw={500}
+              bg={ind % 2 == 0 ? "" : "rgb(0,0,0,0.05)"}
+            >
+              <Image src={obj.images[0]} width={100} withPlaceholder />
+              <Title color={theme.colors.primary} order={4}>
+                {obj?.title}
+              </Title>
+              <Group>
+                <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
+                  Rs. {obj?.price}
+                </Text>
+                <Text color={theme.colors.primary}>
+                  Rs. {obj?.price * ((100 - obj?.sale) / 100)}
+                </Text>
+              </Group>
+              <Text>{obj?.quantity > 0 ? "In Stock" : "Out of Stock"}</Text>
+              <Trash
+                cursor={"pointer"}
+                color="red"
+                onClick={(e) => handleRemove(obj)}
+              />
+            </Flex>
+          ))
+        ) : (
+          <Stack align="center" opacity={0.4}>
+            <Image src={logo} width="200px" />
+            <Title order={4} color={"gray"}>
+              No Product Found in wishlist
             </Title>
-            <Group>
-              <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
-                {obj?.price}
-              </Text>
-              <Text color={theme.colors.primary}>{obj?.salePrice}</Text>
-            </Group>
-            <Text>{obj?.inStock ? "In Stock" : "Out of Stock"}</Text>
-            <Trash
-              cursor={"pointer"}
-              color="red"
-              onClick={(e) => handleRemove(ind)}
-            />
-          </Flex>
-        ))}
+          </Stack>
+        )}
       </Stack>
+      <Center mb="40px">
+        <Button label={"Continue Shopping"} onClick={() => navigate("/")} />
+      </Center>
     </Box>
   );
 };

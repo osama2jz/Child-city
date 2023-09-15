@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Box,
   FileInput,
   Flex,
@@ -15,51 +16,58 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
-import logo from "../../assets/example.jpg";
+import React, { useEffect, useMemo, useState } from "react";
+import logo from "../../assets/logo.png";
 import { useStyles } from "./styles";
-import { File, Trash, Upload } from "tabler-icons-react";
+import { Trash, Upload } from "tabler-icons-react";
 import Button from "../../component/Button";
 import { useMediaQuery } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const [paymentMode, setPaymentMode] = useState("cod");
-  const [wishlist, setWishlist] = useState([
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-      size: "1-2Y",
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-  ]);
-  const handleRemove = (key) => {
-    setWishlist(wishlist.filter((obj, ind) => ind !== key));
+  const [subtotal, setSubtotal] = useState(0);
+  const [wishlist, setWishlist] = useState(
+    JSON.parse(localStorage.getItem("cart")) ?? []
+  );
+  useEffect(() => {
+    setSubtotal(
+      wishlist.reduce((acc, currentItem) => {
+        let itemTotal = 0;
+        if (currentItem.sale > 0) {
+          itemTotal =
+            currentItem.selectedQuantity *
+            (currentItem?.price * ((100 - currentItem?.sale) / 100));
+        } else {
+          itemTotal = currentItem.selectedQuantity * currentItem.price;
+        }
+        return acc + itemTotal;
+      }, 0)
+    );
+  }, [wishlist, subtotal]);
+
+  const handleRemove = (data) => {
+    let removed = wishlist.filter((obj) => obj?._id !== data?._id);
+    localStorage.setItem("wishlist", JSON.stringify(removed));
+    setWishlist(removed);
+    toast.success("Removed from Wishlist!");
+    return;
+  };
+
+  const handleQuantity = (value, data) => {
+    setSubtotal(null);
+    data.selectedQuantity = value;
+    if (wishlist.some((obj) => obj?._id === data?._id)) {
+      wishlist.map((obj, ind) => {
+        if (obj?._id === data?._id) wishlist[ind] = data;
+      });
+      localStorage.setItem("cart", JSON.stringify(wishlist));
+    }
   };
   return (
     <Box>
@@ -75,34 +83,60 @@ const Cart = () => {
         direction={isMobile ? "column" : "row"}
       >
         <Stack w={isMobile ? "100%" : "60%"} style={{ overflowX: "scroll" }}>
-          {wishlist.map((obj, ind) => (
-            <Flex
-              key={ind}
-              align={"center"}
-              justify={"space-around"}
-              py="md"
-              miw={500}
-              bg={ind % 2 == 0 ? "" : "rgb(0,0,0,0.05)"}
-            >
-              <Image src={obj.img} width={100} withPlaceholder />
-              <Stack>
-                <Text color={theme.colors.primary}>{obj?.title}</Text>
-                <Text>size: {obj?.size}</Text>
-              </Stack>
-              <Group>
-                <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
-                  {obj?.price}
-                </Text>
-                <Text color={theme.colors.primary}>{obj?.salePrice}</Text>
-              </Group>
-              <NumberInput value={1} w={70} />
-              <Trash
-                cursor={"pointer"}
-                color="red"
-                onClick={() => handleRemove(ind)}
-              />
-            </Flex>
-          ))}
+          {wishlist.length > 0 ? (
+            wishlist?.map((obj, ind) => (
+              <Flex
+                key={ind}
+                align={"center"}
+                justify={"space-around"}
+                py="md"
+                miw={500}
+                bg={ind % 2 == 0 ? "" : "rgb(0,0,0,0.05)"}
+              >
+                <Image src={obj.images[0]} width={100} withPlaceholder />
+                <Stack spacing={"2px"}>
+                  <Anchor
+                    onClick={() =>
+                      navigate(`/product/${obj?._id}`, { state: { data: obj } })
+                    }
+                    color={theme.colors.primary}
+                  >
+                    {obj?.title}
+                  </Anchor>
+                  <Text>size: {obj?.selectedSize}</Text>
+                  <Text>Color: {obj?.selectedColor}</Text>
+                </Stack>
+                <Group>
+                  <Text
+                    style={{ textDecoration: "line-through", opacity: 0.7 }}
+                  >
+                    Rs. {obj?.price}
+                  </Text>
+                  <Text color={theme.colors.primary}>
+                    Rs. {obj?.price * ((100 - obj?.sale) / 100)}
+                  </Text>
+                </Group>
+                <NumberInput
+                  defaultValue={obj?.selectedQuantity}
+                  w={70}
+                  min={0}
+                  onChange={(e) => handleQuantity(e, obj)}
+                />
+                <Trash
+                  cursor={"pointer"}
+                  color="red"
+                  onClick={() => handleRemove(obj)}
+                />
+              </Flex>
+            ))
+          ) : (
+            <Stack align="center" opacity={0.4}>
+              <Image src={logo} width="200px" />
+              <Title order={4} color={"gray"}>
+                Your Cart is Empty
+              </Title>
+            </Stack>
+          )}
         </Stack>
         <Stack className={classes.details} w={isMobile ? "100%" : "35%"}>
           <Text
@@ -114,13 +148,24 @@ const Cart = () => {
           </Text>
           <SimpleGrid cols={2}>
             <Text fw={600}>Subtotal</Text>
-            <Text
-              color="gray"
-              style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
-              pb={20}
-            >
-              Rs 1590
-            </Text>
+            <Stack spacing={"5px"}>
+              {wishlist.map((obj, ind) => {
+                return (
+                  <Text color="gray" key={ind}>
+                    Rs{" "}
+                    {obj?.sale ? obj.price - ((100 - obj.sale) / 100) : obj.price}{" "}
+                    x {obj?.selectedQuantity}
+                  </Text>
+                );
+              })}
+              <Text
+                color="black"
+                style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
+                pb={20}
+              >
+                Rs {subtotal}
+              </Text>
+            </Stack>
             <Text fw={600}>Shipping</Text>
             <Stack style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }} pb={20}>
               <Text color="gray" fz="sm">
@@ -191,8 +236,15 @@ const Cart = () => {
               />
             </Box>
           )}
-
-          <Button label={"PROCEED TO PAY"} />
+          <Group position="center" noWrap>
+            <Button
+              label={"Continue Shopping"}
+              color="blue"
+              size={isMobile ? "xs" : "md"}
+              onClick={() => navigate("/")}
+            />
+            <Button label={"PROCEED TO PAY"} size={isMobile ? "xs" : "md"} />
+          </Group>
         </Stack>
       </Flex>
     </Box>

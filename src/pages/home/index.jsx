@@ -4,13 +4,14 @@ import {
   Flex,
   Group,
   Image,
+  Loader,
   Stack,
   Text,
   Title,
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useStyles } from "./styles";
 import Button from "../../component/Button";
 import CategoryCard from "./CategoryCard";
@@ -24,11 +25,16 @@ import wave2 from "../../assets/wave-mid.png";
 import wave3 from "../../assets/wave-bot.png";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
+import { UserContext } from "../../context/UserContext";
+import { useQuery } from "react-query";
+import { backendUrl } from "../../constants";
+import axios from "axios";
 
 const Home = () => {
-  const { classes } = useStyles();
   const navigate = useNavigate();
+  const { aboutUs } = useContext(UserContext);
   const theme = useMantineTheme();
+  const { classes } = useStyles();
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const [data, setData] = useState([
     {
@@ -77,6 +83,21 @@ const Home = () => {
       price: 800,
     },
   ]);
+  const { status } = useQuery(
+    "fetchProducts",
+    () => {
+      return axios.get(backendUrl + "/product", {});
+    },
+    {
+      onSuccess: (res) => {
+        const data = res.data.data;
+        data.map((item) => {
+          item.serialNo = data.indexOf(item) + 1;
+        });
+        setData(data);
+      },
+    }
+  );
   return (
     <Box>
       <Carousel
@@ -86,50 +107,38 @@ const Home = () => {
         loop
         styles={{ indicator: { backgroundColor: theme.colors.primary } }}
       >
-        <Carousel.Slide>
-          <Box className={classes.main}>
-            <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
-              Shine Bright
-            </Title>
-            <Title order={3}>Like a Superstar</Title>
-            <Group mt="xl">
-              <Button
-                label={"Shop Girls"}
-                onClick={() => navigate("/product-category/Clothing/Girls")}
-              />
-              <Button
-                label={"Shop Boys"}
-                color="blue"
-                onClick={() => navigate("/product-category/Clothing/Boys")}
-              />
-            </Group>
-            <Image src={wave1} className={classes.wave} />
-            <Image src={wave2} className={classes.wave2} />
-            <Image src={wave3} className={classes.wave1} />
-          </Box>
-        </Carousel.Slide>
-        <Carousel.Slide>
-          <Box className={classes.main}>
-            <Title fz={isMobile ? 60 : 80} ff={"satisfy"}>
-              Shine Bright
-            </Title>
-            <Title order={3}>Like a Superstar</Title>
-            <Group mt="xl">
-              <Button
-                label={"Shop Girls"}
-                onClick={() => navigate("/product-category/Clothing/Girls")}
-              />
-              <Button
-                label={"Shop Boys"}
-                color="blue"
-                onClick={() => navigate("/product-category/Clothing/Boys")}
-              />
-            </Group>
-            <Image src={wave1} className={classes.wave} />
-            <Image src={wave2} className={classes.wave2} />
-            <Image src={wave3} className={classes.wave1} />
-          </Box>
-        </Carousel.Slide>
+        {aboutUs?.sliderImages &&
+          aboutUs?.sliderImages.map((obj, ind) => {
+            return (
+              <Carousel.Slide key={ind}>
+                <Box className={classes.main}>
+                  <Image
+                    src={obj}
+                    fit="cover"
+                    // style={{ objectPosition: "top" }}
+                  />
+                  <Group mt="xl" className={classes.buttons}>
+                    <Button
+                      label={"Shop Girls"}
+                      onClick={() =>
+                        navigate("/product-category/Girls/Clothing")
+                      }
+                    />
+                    <Button
+                      label={"Shop Boys"}
+                      color="blue"
+                      onClick={() =>
+                        navigate("/product-category/Boys/Clothing")
+                      }
+                    />
+                  </Group>
+                  <Image src={wave1} className={classes.wave} />
+                  <Image src={wave2} className={classes.wave2} />
+                  <Image src={wave3} className={classes.wave1} />
+                </Box>
+              </Carousel.Slide>
+            );
+          })}
       </Carousel>
 
       <Group position="center" spacing={"xl"} my="50px" mx="md">
@@ -168,15 +177,19 @@ const Home = () => {
         </Text>
       </Stack>
       <Group position="center" spacing={isMobile ? 20 : "50px"} my="50px">
-        {data?.map((obj, ind) => (
-          <ProductCard data={obj} key={ind} />
-        ))}
+        {status === "loading" ? (
+          <Loader />
+        ) : (
+          data
+            ?.slice(0, 8)
+            .map((obj, ind) => <ProductCard data={obj} key={ind} />)
+        )}
       </Group>
       <Center mb="50px">
         <Button
           label={"Shop All Products"}
           color="blue"
-          onClick={() => navigate("/product-category")}
+          onClick={() => navigate("/product-category/Boys/Clothing")}
         />
       </Center>
       <Flex direction={{ lg: "row", base: "column" }} mb="xl">
@@ -190,7 +203,10 @@ const Home = () => {
             with thoughtful designs, quality materials and construction, and
             convenient shopping options.
           </Text>
-          <Button label={"Shop Colection"} />
+          <Button
+            label={"Shop Colection"}
+            onClick={() => navigate("/product-category/Girls/Clothing")}
+          />
         </Box>
         <Image src={pink} height={440} />
       </Flex>

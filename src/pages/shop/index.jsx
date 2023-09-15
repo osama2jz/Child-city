@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStyles } from "./styles";
 import girls from "../../assets/girls.jpg";
 import boys from "../../assets/boys.jpg";
@@ -6,10 +6,27 @@ import toys from "../../assets/toys.jpg";
 import access from "../../assets/access.jpg";
 import newBorn from "../../assets/newBorn.jpg";
 import CategoryCard from "../home/CategoryCard";
-import { Box, Group, Title } from "@mantine/core";
+import { Box, Group, Loader, Title } from "@mantine/core";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { backendUrl } from "../../constants";
 
 const Shop = () => {
   const { classes } = useStyles();
+  const [data, setData] = useState([]);
+  const { status } = useQuery(
+    "fetchCats",
+    () => {
+      return axios.get(backendUrl + "/category");
+    },
+    {
+      onSuccess: (res) => {
+        const data = res.data.data;
+        data.filter((item) => !item.blocked);
+        setData(data);
+      },
+    }
+  );
   return (
     <Box>
       <Box className={classes.main}>
@@ -18,41 +35,19 @@ const Shop = () => {
         </Title>
       </Box>
       <Group position="center" my="50px" spacing={"30px"}>
-        <CategoryCard
-          img={boys}
-          title1={"Boys"}
-          title2={"Clothing"}
-          text={"Incredible Quality"}
-          to="/Clothing/Boys"
-        />
-        <CategoryCard
-          img={girls}
-          title1={"Girls"}
-          title2={"Clothing"}
-          text={"World's Best Brands"}
-          to="/Clothing/Girls"
-        />
-        <CategoryCard
-          img={toys}
-          title1={"Toys"}
-          title2={"& Games"}
-          text={"For all ages"}
-          to="/Toys & Games"
-        />
-        <CategoryCard
-          img={access}
-          title1={"Accessories"}
-          title2={"kids"}
-          text={"For all ages"}
-          to="/Accessories"
-        />
-        <CategoryCard
-          img={newBorn}
-          title1={"New Born"}
-          title2={"Babies"}
-          text={"Cute Stuff"}
-          to="/Clothing/New Born"
-        />
+        {status === "loading" ? (
+          <Loader />
+        ) : (
+          data?.map((obj, ind) => (
+            <CategoryCard
+              key={ind}
+              img={obj.image}
+              title1={obj.title}
+              title2={obj?.subTitle}
+              text={obj?.description}
+            />
+          ))
+        )}
       </Group>
     </Box>
   );

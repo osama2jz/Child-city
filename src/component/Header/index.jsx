@@ -8,8 +8,8 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { useState } from "react";
+import { useMediaQuery } from "@mantine/hooks";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   BrandFacebook,
@@ -27,28 +27,30 @@ import logo from "../../assets/logo.png";
 import { useStyles } from "./styles";
 import Signin from "../../pages/Signin";
 import { spotlight } from "@mantine/spotlight";
+import { UserContext } from "../../context/UserContext";
 
 const Header = ({ opened, toggle }) => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const navigate = useNavigate();
   const theme = useMantineTheme();
+  const { aboutUs } = useContext(UserContext);
   const [show, setShow] = useState(true);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const { classes } = useStyles({ opened, show });
+  let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
+  let cartFromLocal = JSON.parse(localStorage.getItem("cart")) ?? [];
+
   return (
     <>
-      {show && (
+      {show && aboutUs?.topAlert?.length > 0 && (
         <Flex
           bg={"#ff8087"}
           className={classes.delivery}
           justify={"center"}
           py="xs"
         >
-          <marquee>
-            Free Delivery Available Over 2999. Flat 50% Off on All Summer
-            Collection & Upto 20% Off on Pre Winter Collection.
-          </marquee>
+          <marquee>{aboutUs?.topAlert}</marquee>
           <CloseButton
             variant={"light"}
             onClick={() => setShow(false)}
@@ -72,14 +74,13 @@ const Header = ({ opened, toggle }) => {
           <Flex gap={"sm"}>
             <Mail />
             <Text fz={isMobile ? "xs" : "md"} fw="bold">
-              shop@childcity.shop
+              {aboutUs?.primaryEmail}
             </Text>
           </Flex>
           <Flex gap="sm">
             <Phone />
             <Text fz={isMobile ? "xs" : "md"} fw="bold">
-              {" "}
-              +92-336-7866668
+              {aboutUs?.primaryPhone}
             </Text>
           </Flex>
         </Flex>
@@ -89,25 +90,15 @@ const Header = ({ opened, toggle }) => {
           </Text>
           <BrandFacebook
             className={classes.icon}
-            onClick={() =>
-              window.open(
-                "https://www.facebook.com/Childcity.shop?mibextid=ZbWKwL",
-                "_blank"
-              )
-            }
+            onClick={() => window.open(aboutUs?.facebook, "_blank")}
           />
           <BrandInstagram
             className={classes.icon}
-            onClick={() =>
-              window.open(
-                "https://instagram.com/childcity.shop?igshid=MzRlODBiNWFlZA==",
-                "_blank"
-              )
-            }
+            onClick={() => window.open(aboutUs?.instagram, "_blank")}
           />
           <BrandYoutube
             className={classes.icon}
-            onClick={() => window.open("www.youtube.com", "_blank")}
+            onClick={() => window.open(aboutUs?.youtube, "_blank")}
           />
         </Flex>
       </Box>
@@ -332,7 +323,8 @@ const Header = ({ opened, toggle }) => {
           <Search className={classes.iconS} onClick={spotlight.open} />
           <Indicator
             color="pink"
-            label={"0"}
+            label={wishlistFromLocal.length}
+            styles={{ indicator: { width: 15 } }}
             size={"md"}
             style={{ display: "flex", alignItems: "center" }}
           >
@@ -344,7 +336,8 @@ const Header = ({ opened, toggle }) => {
           <Indicator
             color="pink"
             size={"md"}
-            label={"0"}
+            styles={{ indicator: { width: 15 } }}
+            label={cartFromLocal.length}
             style={{ display: "flex", alignItems: "center" }}
           >
             <ShoppingBag

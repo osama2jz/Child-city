@@ -5,6 +5,18 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import { SpotlightProvider } from "@mantine/spotlight";
+import { UserProvider } from "./context/UserContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Toaster } from "react-hot-toast";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      cacheTime: 30000,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -13,7 +25,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          fontFamily: "Poppins, sans-serif",
           colors: {
             primary: [
               "#81d1e5",
@@ -35,7 +46,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           }),
         }}
       >
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <UserProvider>
+        <Toaster />
+
+            <App />
+          </UserProvider>
+        </QueryClientProvider>
       </MantineProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -4,10 +4,13 @@ import logo from "../../assets/logo.png";
 import { ClockHour3, Mail, MapPin, Phone } from "tabler-icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const Footer = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
+  const { aboutUs } = useContext(UserContext);
   const isMobile = useMediaQuery("(max-width: 1100px)");
 
   return (
@@ -39,7 +42,9 @@ const Footer = () => {
         </Stack>
         <Stack align="flex-start" fz={isMobile ? "md" : "lg"}>
           <Text fw="600">Extras</Text>
-          <Text className={classes.item} onClick={()=>navigate('/wishlist')}>Wishlist</Text>
+          <Text className={classes.item} onClick={() => navigate("/wishlist")}>
+            Wishlist
+          </Text>
           <Text className={classes.item}>Terms & Conditions</Text>
           <Text className={classes.item}>Privacy Policy</Text>
         </Stack>
@@ -49,15 +54,15 @@ const Footer = () => {
             <ClockHour3 size={20} /> Alawys Open
           </Text>
           <Text className={classes.item2}>
-            <MapPin size={20} /> Lahore, Pakistan
+            <MapPin size={20} /> {aboutUs?.address}
           </Text>
           <Text className={classes.item2}>
             <Phone size={20} />
-            +92-336-7866668
+            {aboutUs?.primaryPhone}
           </Text>
           <Text className={classes.item2}>
             <Mail size={20} />
-            shop@childcity.shop
+            {aboutUs?.primaryEmail}
           </Text>
         </Stack>
         <Stack align="flex-start" fz={isMobile ? "md" : "lg"}>

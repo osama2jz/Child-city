@@ -11,7 +11,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp } from "tabler-icons-react";
 import { useStyles } from "./styles";
 import Button from "../../component/Button";
@@ -31,8 +31,24 @@ const Filters = ({
   data,
 }) => {
   const { classes } = useStyles();
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
+  const [open1, setOpen1] = useState(
+    selectedCategory === "All Clothings" ||
+      selectedCategory === "Girls" ||
+      selectedCategory === "Boys" ||
+      selectedCategory === "New Born"
+      ? true
+      : false
+  );
+  useEffect(() => {
+    if (
+      selectedCategory === "All Clothings" ||
+      selectedCategory === "Girls" ||
+      selectedCategory === "Boys" ||
+      selectedCategory === "New Born"
+    ) {
+      setOpen1(true);
+    }
+  }, [selectedCategory]);
   const isMobile = useMediaQuery("(max-width: 1100px)");
   return (
     <Stack
@@ -50,11 +66,24 @@ const Filters = ({
 
       <Text
         onClick={() => {
-          setSelectedCategory("Clothing");
           setOpen1(!open1);
         }}
-        color={selectedCategory === "Clothing" ? "#ff8087" : "black"}
-        fw={selectedCategory === "Clothing" ? "bold" : ""}
+        color={
+          selectedCategory === "All Clothings" ||
+          selectedCategory === "Girls" ||
+          selectedCategory === "Boys" ||
+          selectedCategory === "New Born"
+            ? "#ff8087"
+            : "black"
+        }
+        fw={
+          selectedCategory === "All Clothings" ||
+          selectedCategory === "Girls" ||
+          selectedCategory === "Boys" ||
+          selectedCategory === "New Born"
+            ? "bold"
+            : ""
+        }
         style={{
           display: "flex",
           alignItems: "center",
@@ -65,18 +94,23 @@ const Filters = ({
       >
         - Clothing {!open1 ? <ChevronDown /> : <ChevronUp />}
         <Badge pos={"absolute"} right={10} variant="filled">
-          {data?.filter((obj) => obj.category === "Clothing").length}
+          {data?.filter((obj) => obj.category.subTitle === "Clothing").length}
         </Badge>
       </Text>
       <Collapse in={open1}>
         <Stack w={"80%"} align="center">
           <Select
-            onChange={setSelectedGender}
-            value={selectedGender}
-            data={[{ label: "All", value: "" }, "Boys", "Girls", "New Born"]}
+            onChange={setSelectedCategory}
+            value={selectedCategory}
+            data={[
+              { label: "All", value: "All Clothings" },
+              "Boys",
+              "Girls",
+              "New Born",
+            ]}
             placeholder="Gender"
           />
-          <Select
+          {/* <Select
             data={[
               { label: "All", value: "" },
               { label: "Kamez Shalwar", value: "Kamez Shalwar" },
@@ -85,30 +119,27 @@ const Filters = ({
             placeholder="Dress Category"
             value={selectedType}
             onChange={setSelectedtType}
+          /> */}
+          <Select
+            data={[
+              { label: "All", value: "" },
+              "Winters Collection",
+              "Summers Collection",
+            ]}
+            placeholder="Dress Category"
+            value={selectedSeason}
+            onChange={setSeason}
           />
           <Select
-            onChange={(e) => {
-              if (e[0] == "w") {
-                setSeason("Winter Collection");
-                setSelectedAge(e.slice(1));
-              } else if (e === "") {
-                setSelectedAge("");
-                setSeason("");
-              } else {
-                setSeason("Summer Collection");
-                setSelectedAge(e);
-              }
-            }}
+            onChange={setSelectedAge}
             value={selectedAge}
             data={[
-              { label: "All", value: "", group: "All" },
-              { value: "w1-2Y", label: "1-2Y", group: "Winter Collection" },
-              { value: "w2-3Y", label: "2-3Y", group: "Winter Collection" },
-              { value: "3-4Y", label: "3-4Y", group: "Summer Collection" },
-              { value: "4-6Y", label: "4-6Y", group: "Summer Collection" },
-              { value: "6-9Y", label: "6-9Y", group: "Summer Collection" },
-              { value: "3-6M", label: "3-6M", group: "Summer Collection" },
-              { value: "6-9M", label: "6-9M", group: "Summer Collection" },
+              { label: "All", value: "" },
+              "3-6M",
+              "6-9M",
+              "1-2Y",
+              "2-3Y",
+              "3-4Y",
             ]}
             placeholder="Dress Size"
           />
@@ -135,21 +166,21 @@ const Filters = ({
           variant="filled"
           fw={selectedCategory === "Accessories" ? "bold" : ""}
         >
-          {data?.filter((obj) => obj.category === "Accessories").length}
+          {data?.filter((obj) => obj.category.title === "Accessories").length}
         </Badge>
       </Text>
       <Text
         pos={"relative"}
         style={{ cursor: "pointer" }}
         onClick={() => {
-          setSelectedCategory("Toys & Games");
+          setSelectedCategory("Toys");
           setSeason("");
           setSelectedAge("");
           setSelectedGender("");
           setOpen1(false);
         }}
-        color={selectedCategory === "Toys & Games" ? "#ff8087" : "black"}
-        fw={selectedCategory === "Toys & Games" ? "bold" : ""}
+        color={selectedCategory === "Toys" ? "#ff8087" : "black"}
+        fw={selectedCategory === "Toys" ? "bold" : ""}
       >
         - Toys & Games{" "}
         <Badge
@@ -158,7 +189,7 @@ const Filters = ({
           variant="filled"
           fw={selectedCategory === "Toys & Games" ? "bold" : ""}
         >
-          {data?.filter((obj) => obj.category === "Toys & Games").length}
+          {data?.filter((obj) => obj.category.title === "Toys").length}
         </Badge>
       </Text>
       <Button

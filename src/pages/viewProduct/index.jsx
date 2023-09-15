@@ -12,34 +12,65 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
   rem,
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Heart } from "tabler-icons-react";
 import pic from "../../assets/example.jpg";
 import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
+import { useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
-  const data = {
-    imgs: [pic, pic, pic],
-    title: "CC034-Girls Dresses",
-    descritpion: "Baby Girl Designs. Soft and Comfortable. Summer Collection",
-    price: "2999",
-    salePrice: "1999",
-    size: "1-2Y",
-    sizes: "1-2Y, 2-3Y, 3-4Y",
-    sku: "CC034",
-    colors: ["red", "yellow", "blue"],
-    additionalInfo: { size: "1-2Y,2-3Y,3-4Y", size2: "1-2Y,2-3Y,3-4Y" },
-  };
+  const { data } = useLocation().state;
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [inWishlist, setInWishlist] = useState(false);
+  useEffect(() => {
+    let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
+    setInWishlist(wishlistFromLocal.some((obj) => obj?._id === data?._id));
+  }, [data?._id]);
+  const addToCart = () => {
+    let dataToadd = data;
+    dataToadd.selectedColor = selectedColor;
+    dataToadd.selectedSize = selectedSize;
+    dataToadd.selectedQuantity = selectedQuantity;
+    let cartFromLocal = JSON.parse(localStorage.getItem("cart")) ?? [];
+    if (cartFromLocal.some((obj) => obj?._id === data?._id)) {
+      cartFromLocal.map((obj, ind) => {
+        if (obj?._id === data?._id) cartFromLocal[ind] = dataToadd;
+      });
+      localStorage.setItem("cart", JSON.stringify(cartFromLocal));
+    } else {
+      cartFromLocal.push(dataToadd);
+      localStorage.setItem("cart", JSON.stringify(cartFromLocal));
+    }
+    toast.success("Added to Cart!");
+  };
+
+  const addToWishlist = useCallback(() => {
+    let dataToadd = data;
+    let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
+    if (wishlistFromLocal.some((obj) => obj?._id === data?._id)) {
+      let removed = wishlistFromLocal.filter((obj) => obj?._id !== data?._id);
+      localStorage.setItem("wishlist", JSON.stringify(removed));
+      toast.success("Removed from Wishlist!");
+      setInWishlist(false);
+      return;
+    }
+    wishlistFromLocal.push(dataToadd);
+    localStorage.setItem("wishlist", JSON.stringify(wishlistFromLocal));
+    toast.success("Added to Wishlist!");
+    setInWishlist(true);
+  }, [data]);
+  console.log(data);
   return (
     <Box>
       <Flex
@@ -69,7 +100,7 @@ const ViewProduct = () => {
               },
             }}
           >
-            {data?.imgs.map((img, ind) => (
+            {data?.images.map((img, ind) => (
               <Carousel.Slide
                 key={ind}
                 style={{ display: "flex", justifyContent: "center" }}
@@ -79,52 +110,67 @@ const ViewProduct = () => {
             ))}
           </Carousel>
         </Box>
-        <Stack spacing={20} w={isMobile ? "80%" : "50%"}>
+        <Stack
+          spacing={20}
+          miw={isMobile ? "95%" : "30%"}
+          style={{
+            border: "2px dashed rgb(0,0,0,0.1)",
+            padding: "20px",
+            borderRadius: "20px",
+          }}
+        >
           <Title>{data?.title}</Title>
 
-          <Group>
-            <Text>
-              Colors: <b>{selectedColor}</b>
-            </Text>
-            {data?.colors.map((color, ind) => {
-              return (
-                <ColorSwatch
-                  key={ind}
-                  color={color}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setSelectedColor(color)}
-                >
-                  {selectedColor === color && (
-                    <CheckIcon width={14} color="black" />
-                  )}
-                </ColorSwatch>
-              );
-            })}
-          </Group>
-
-          <Chip.Group multiple={false}>
+          {data?.colors.length > 0 && (
             <Group>
               <Text>
-                Sizes: <b> {selectedSize}</b>
+                Colors: <b>{selectedColor}</b>
               </Text>
-              {data?.sizes.split(",").map((obj, ind) => (
-                <Chip
-                  value={obj}
-                  key={ind}
-                  variant="filled"
-                  onClick={() => setSelectedSize(obj)}
-                >
-                  {obj}
-                </Chip>
-              ))}
+              {data?.colors.map((color, ind) => {
+                return (
+                  <Tooltip key={ind} label={color}>
+                    <ColorSwatch
+                      color={color}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setSelectedColor(color)}
+                    >
+                      {selectedColor === color && (
+                        <CheckIcon width={14} color="black" />
+                      )}
+                    </ColorSwatch>
+                  </Tooltip>
+                );
+              })}
             </Group>
-          </Chip.Group>
+          )}
+
+          {data?.sizes.length > 0 && (
+            <Chip.Group multiple={false}>
+              <Group>
+                <Text>
+                  Sizes: <b> {selectedSize}</b>
+                </Text>
+                {data?.sizes.map((obj, ind) => (
+                  <Chip
+                    value={obj}
+                    key={ind}
+                    variant="filled"
+                    onClick={() => setSelectedSize(obj)}
+                  >
+                    {obj}
+                  </Chip>
+                ))}
+              </Group>
+            </Chip.Group>
+          )}
           <Group align="baseline">
-            <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
-              Rs. {data?.price}
-            </Text>
+            {data?.sale && (
+              <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>
+                Rs. {data?.price}
+              </Text>
+            )}
             <Text color={theme.colors.primary} fw={600} fz={"26px"}>
-              Rs. {data?.salePrice}
+              Rs. {data?.price * ((100 - data?.sale) / 100)}
             </Text>
           </Group>
           <Group>
@@ -135,16 +181,30 @@ const ViewProduct = () => {
               onChange={(e) => setSelectedQuantity(e)}
             />
             <Button
-              label={"Add to Cart"}
-              disabled={!selectedColor || !selectedSize || selectedQuantity < 1}
+              label={data?.quantity < 1 ? "Out Of Stock" : "Add to Cart"}
+              onClick={addToCart}
+              disabled={
+                !selectedColor ||
+                !selectedSize ||
+                selectedQuantity < 1 ||
+                data?.quantity < 1
+              }
             />
           </Group>
-          <Text style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Heart /> Add to Wishlist
+          <Text
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              cursor: "pointer",
+            }}
+            onClick={addToWishlist}
+          >
+            <Heart fill={inWishlist ? "red" : "white"} /> Add to Wishlist
           </Text>
           <Text>SKU: {data?.sku}</Text>
           <List>
-            {data.descritpion?.split(".").map((obj, ind) => (
+            {data.description?.split(".").map((obj, ind) => (
               <List.Item key={ind}>{obj}</List.Item>
             ))}
           </List>
