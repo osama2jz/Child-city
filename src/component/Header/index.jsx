@@ -28,6 +28,9 @@ import { useStyles } from "./styles";
 import Signin from "../../pages/Signin";
 import { spotlight } from "@mantine/spotlight";
 import { UserContext } from "../../context/UserContext";
+import { useQuery } from "react-query";
+import { backendUrl, sizes } from "../../constants";
+import axios from "axios";
 
 const Header = ({ opened, toggle }) => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
@@ -40,7 +43,20 @@ const Header = ({ opened, toggle }) => {
   const { classes } = useStyles({ opened, show });
   let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
   let cartFromLocal = JSON.parse(localStorage.getItem("cart")) ?? [];
+  const [categories, setCategories] = useState([]);
 
+  const { status } = useQuery(
+    "fetchCategories",
+    () => {
+      return axios.get(backendUrl + "/category", {});
+    },
+    {
+      onSuccess: (res) => {
+        let cat = res.data.data.filter((obj) => !obj?.blocked);
+        setCategories(cat);
+      },
+    }
+  );
   return (
     <>
       {show && aboutUs?.topAlert?.length > 0 && (
@@ -122,188 +138,55 @@ const Header = ({ opened, toggle }) => {
           <img src={logo} width={isMobile ? 100 : 100} />
         </Flex>
         <Flex gap={"lg"} align={"center"} className={classes.navigationBar}>
-          <Link
-            className={classes.link}
-            to="/shop"
-            onClick={() => isMobile && toggle()}
-          >
-            Shop All
-          </Link>
-          {/* <Link
-            className={classes.link}
-            to="/product-category/Clothing/New Born"
-            onClick={() => isMobile && toggle()}
-          >
-            New Born
-          </Link> */}
-          <Menu trigger="hover">
-            <Menu.Target>
-              <Link
-                className={classes.link}
-                to="/product-category/Clothing/Boys"
-              >
-                Boys Clothing
-              </Link>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Flex>
-                <Box>
-                  <Menu.Label>Pre Winter</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    3-9M
-                  </Menu.Item>
-
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    1-4Y
-                  </Menu.Item>
-                </Box>
-                <Box>
-                  <Menu.Label>Summer Collection</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    3-6M
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    6-9M
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    9-12M
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    1-2Y
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    2-3Y
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    3-4Y
-                  </Menu.Item>
-                </Box>
-              </Flex>
-            </Menu.Dropdown>
-          </Menu>
-          <Menu trigger="hover">
-            <Menu.Target>
-              <Link
-                className={classes.link}
-                to="/product-category/Clothing/Girls"
-              >
-                Girls Clothing
-              </Link>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Flex>
-                <Box>
-                  <Menu.Label>Pre Winter</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    3-9M
-                  </Menu.Item>
-
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    1-4Y
-                  </Menu.Item>
-                </Box>
-                <Box>
-                  <Menu.Label>Summer Collection</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    3-6M
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    6-9M
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    9-12M
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    1-2Y
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    2-3Y
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      isMobile && toggle();
-                    }}
-                  >
-                    3-4Y
-                  </Menu.Item>
-                </Box>
-              </Flex>
-            </Menu.Dropdown>
-          </Menu>
-          <Link
-            className={classes.link}
-            to="/product-category/Toys & Games"
-            onClick={() => isMobile && toggle()}
-          >
-            Toys & Games
-          </Link>
-          <Link
-            className={classes.link}
-            to="/product-category/Accessories"
-            onClick={() => isMobile && toggle()}
-          >
-            Accessories
-          </Link>
+          {categories.map((obj, ind) => {
+            if (obj?.subCategories.length < 1)
+              return (
+                <Link
+                  key={ind}
+                  className={classes.link}
+                  to={`/product-category/${obj?.title}`}
+                  onClick={() => isMobile && toggle()}
+                >
+                  {obj?.title}
+                </Link>
+              );
+            else {
+              return (
+                <Menu trigger="hover" key={ind}>
+                  <Menu.Target>
+                    <Link
+                      className={classes.link}
+                      to={`/product-category/${obj?.title}`}
+                    >
+                      {obj?.title}
+                    </Link>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Flex>
+                      {obj?.subCategories.map((sub, ind2) => (
+                        <Box key={ind2}>
+                          <Menu.Label>{sub?.title}</Menu.Label>
+                          {sizes.map((size, s) => (
+                            <Menu.Item
+                              key={s}
+                              onClick={() => {
+                                isMobile && toggle();
+                                navigate(
+                                  `/product-category/${obj?.title}/${sub?.title}/${size}}`
+                                );
+                              }}
+                            >
+                              {size}
+                            </Menu.Item>
+                          ))}
+                        </Box>
+                      ))}
+                    </Flex>
+                  </Menu.Dropdown>
+                </Menu>
+              );
+            }
+          })}
           {isLoggedIn && (
             <Link
               className={classes.link}

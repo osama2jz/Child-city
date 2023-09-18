@@ -24,6 +24,10 @@ import Button from "../../component/Button";
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useMutation } from "react-query";
+import { backendUrl } from "../../constants";
+import axios from "axios";
+import { uploadSingleFile } from "../../firebase";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -32,9 +36,21 @@ const Cart = () => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const [paymentMode, setPaymentMode] = useState("cod");
   const [subtotal, setSubtotal] = useState(0);
+  const [validate, setValidate] = useState(false);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const [address, setAddress] = useState({
+    province: "",
+    city: "",
+    address: "",
+    postalCode: null,
+  });
+  const [coupen, setCoupen] = useState("");
   const [wishlist, setWishlist] = useState(
     JSON.parse(localStorage.getItem("cart")) ?? []
   );
+
+  //subtotal
   useEffect(() => {
     setSubtotal(
       wishlist.reduce((acc, currentItem) => {
@@ -51,14 +67,16 @@ const Cart = () => {
     );
   }, [wishlist, subtotal]);
 
+  //remove
   const handleRemove = (data) => {
     let removed = wishlist.filter((obj) => obj?._id !== data?._id);
-    localStorage.setItem("wishlist", JSON.stringify(removed));
+    localStorage.setItem("cart", JSON.stringify(removed));
     setWishlist(removed);
-    toast.success("Removed from Wishlist!");
+    toast.success("Removed from Cart!");
     return;
   };
 
+  //quantity
   const handleQuantity = (value, data) => {
     setSubtotal(null);
     data.selectedQuantity = value;
@@ -69,6 +87,39 @@ const Cart = () => {
       localStorage.setItem("cart", JSON.stringify(wishlist));
     }
   };
+
+  const Validate = () => {
+    if (
+      !address.city ||
+      !address.province ||
+      !address.address ||
+      (paymentMode !== "cod" && !file)
+    ) {
+      setValidate(true);
+      return;
+    } else {
+      handleOrder.mutate();
+    }
+  };
+  const handleOrder = useMutation(
+    async () => {
+      let values = {
+        address: address,
+        product: wishlist,
+        paymentMode: paymentMode,
+        totalPrice: subtotal + 149,
+        status: "Pending",
+      };
+      return axios.post(`${backendUrl + "/order"}`, values, {});
+    },
+    {
+      onSuccess: (response) => {
+        toast.success("Order Placed");
+      },
+    }
+  );
+  console.log(loading, file);
+
   return (
     <Box>
       <Box className={classes.main}>
@@ -107,11 +158,13 @@ const Cart = () => {
                   <Text>Color: {obj?.selectedColor}</Text>
                 </Stack>
                 <Group>
-                  <Text
-                    style={{ textDecoration: "line-through", opacity: 0.7 }}
-                  >
-                    Rs. {obj?.price}
-                  </Text>
+                  {obj?.sale && (
+                    <Text
+                      style={{ textDecoration: "line-through", opacity: 0.7 }}
+                    >
+                      Rs. {obj?.price}
+                    </Text>
+                  )}
                   <Text color={theme.colors.primary}>
                     Rs. {obj?.price * ((100 - obj?.sale) / 100)}
                   </Text>
@@ -119,7 +172,7 @@ const Cart = () => {
                 <NumberInput
                   defaultValue={obj?.selectedQuantity}
                   w={70}
-                  min={0}
+                  min={1}
                   onChange={(e) => handleQuantity(e, obj)}
                 />
                 <Trash
@@ -153,7 +206,7 @@ const Cart = () => {
                 return (
                   <Text color="gray" key={ind}>
                     Rs{" "}
-                    {obj?.sale ? obj.price - ((100 - obj.sale) / 100) : obj.price}{" "}
+                    {obj?.sale ? obj.price - (100 - obj.sale) / 100 : obj.price}{" "}
                     x {obj?.selectedQuantity}
                   </Text>
                 );
@@ -175,6 +228,9 @@ const Cart = () => {
                 Shipping Address
               </Text>
               <Select
+                error={
+                  validate && address.province.length < 1 && "Select Province"
+                }
                 placeholder="Province"
                 data={[
                   "Azad Kashmir",
@@ -186,14 +242,39 @@ const Cart = () => {
                   "Punjab",
                   "Sindh",
                 ]}
+                onChange={(e) => setAddress((add) => ({ ...add, province: e }))}
               />
-              <TextInput placeholder="City" />
-              <TextInput placeholder="Zip Code (Optional)" />
-              <Textarea placeholder="Address" />
+              <TextInput
+                placeholder="City"
+                onChange={(e) =>
+                  setAddress((add) => ({ ...add, city: e.target.value }))
+                }
+                error={validate && address.city.length < 1 && "Enter City Name"}
+              />
+              <TextInput
+                placeholder="Zip Code (Optional)"
+                type="number"
+                onChange={(e) =>
+                  setAddress((add) => ({ ...add, postalCode: e.target.value }))
+                }
+              />
+              <Textarea
+                placeholder="Address"
+                error={
+                  validate && address.address.length < 1 && "Enter Address"
+                }
+                onChange={(e) =>
+                  setAddress((add) => ({ ...add, address: e.target.value }))
+                }
+              />
             </Stack>
             <Text fw={600}>Discount Coupen</Text>
             <Group position="apart">
-              <TextInput placeholder="Code" w={120} />
+              <TextInput
+                placeholder="Code"
+                w={120}
+                onChange={(e) => setCoupen(e.target.value)}
+              />
               <Button label={"Apply"} compact={true} size="xs" />
             </Group>
             <Text fw={600}>Total</Text>
@@ -203,7 +284,7 @@ const Cart = () => {
               style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
               pb={20}
             >
-              1,747 <small>(Including Tax)</small>
+              Rs. {subtotal + 149} <small>(Including Tax)</small>
             </Text>
             <Text fw={600}>Payment Mode</Text>
             <Radio.Group defaultValue={paymentMode} onChange={setPaymentMode}>
@@ -225,13 +306,27 @@ const Cart = () => {
               <FileInput
                 placeholder="Upload Screenshot"
                 w={"175px"}
+                error={validate && !file && "Please upload Payment Screenshot"}
                 icon={<Upload color="gray" />}
                 radius={"30px"}
                 variant="filled"
-                style={{
-                  border: "1px dashed gray",
-                  borderRadius: "30px",
-                  margin: "auto",
+                accept="image/*,file/*"
+                onChange={(file) => {
+                  uploadSingleFile({
+                    file,
+                    folderName: "Payments",
+                    urlSetter: setFile,
+                    setProgress: setLoading,
+                  });
+                }}
+                styles={{
+                  root: {
+                    margin: "auto",
+                  },
+                  input: {
+                    border: "1px dashed gray",
+                  },
+                  error: { textAlign: "center" },
                 }}
               />
             </Box>
@@ -243,7 +338,13 @@ const Cart = () => {
               size={isMobile ? "xs" : "md"}
               onClick={() => navigate("/")}
             />
-            <Button label={"PROCEED TO PAY"} size={isMobile ? "xs" : "md"} />
+            <Button
+              label={"PROCEED TO PAY"}
+              size={isMobile ? "xs" : "md"}
+              disabled={wishlist.length < 1}
+              onClick={Validate}
+              loading={loading && loading < 100}
+            />
           </Group>
         </Stack>
       </Flex>

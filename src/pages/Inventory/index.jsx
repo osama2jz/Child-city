@@ -26,17 +26,18 @@ const Inventory = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
-  const { cat, gender } = useParams();
+  const { cat, subCat, size } = useParams();
   const [toShow, setToShow] = useState(12);
   const [price, setPrice] = useState([0, 5000]);
   const [showFilters, setShowFilters] = useState(true);
   const [activePage, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedGender, setSelectedGender] = useState("");
-  const [selectedAge, setSelectedAge] = useState("");
-  const [selectedSeason, setSeason] = useState("");
   const [selectedType, setSelectedtType] = useState("");
+  const [selectedSubCategory, setSelectedtSubCategory] = useState("");
+  const [selectedSize, setSelectedtSize] = useState("");
   const [data, setData] = useState([]);
+
+  //all products
   const { status } = useQuery(
     "fetchProducts",
     () => {
@@ -50,6 +51,8 @@ const Inventory = () => {
       },
     }
   );
+
+  //page name
   useEffect(() => {
     document.title = cat;
     return () => {
@@ -57,58 +60,28 @@ const Inventory = () => {
     };
   }, [cat]);
 
+  //set filters
   useEffect(() => {
     setSelectedCategory(cat);
-    setSelectedGender(gender);
-  }, [cat, gender]);
+    setSelectedtSubCategory(subCat);
+    setSelectedtSize(size);
+  }, [cat, size, subCat]);
   let totalPages = 0;
 
+  //filter data
   const filtered = useCallback(() => {
-    if (selectedCategory === "Accessories" || selectedCategory === "Toys") {
-      return data.filter(
-        (obj, ind) =>
-          obj.category.title === selectedCategory &&
-          obj?.price >= price[0] &&
-          obj?.price <= price[1]
-      );
-    } else if (selectedCategory === "All Clothings") {
-      return data.filter(
-        (obj) =>
-          obj.price >= price[0] &&
-          obj.price <= price[1] &&
-          obj.category.title !== "Accessories" &&
-          obj.category.title !== "Toys" &&
-          obj?.sizes?.join(",").includes(selectedAge) &&
-          obj?.season.includes(selectedSeason) &&
-          obj.price >= price[0] &&
-          obj.price <= price[1]
-      );
-    } else if (selectedCategory === "") {
-      return data.filter(
-        (obj) => obj.price >= price[0] && obj.price <= price[1]
-      );
-    } else {
-      return data.filter((obj) => {
-        return (
-          obj?.category.title === selectedCategory &&
-          obj?.sizes?.join(",").includes(selectedAge) &&
-          obj?.season.includes(selectedSeason) &&
-          // obj?.type.includes(selectedType) &&
-          obj.price >= price[0] &&
-          obj.price <= price[1]
-        );
-      });
-    }
-  }, [
-    selectedCategory,
-    data,
-    price,
-    selectedAge,
-    selectedGender,
-    selectedSeason,
-    selectedType,
-  ]);
-  console.log(filtered(), selectedCategory, selectedAge);
+    if (selectedCategory === "") return data;
+    return data.filter(
+      (obj) =>
+        obj.category.title === selectedCategory &&
+        obj?.subCategory?.title.includes(selectedSubCategory) &&
+        obj?.sizes?.join(",").includes(selectedSize) &&
+        obj.price >= price[0] &&
+        obj.price <= price[1]
+    );
+  }, [data, selectedCategory, selectedSubCategory, selectedSize, price]);
+
+  //pagination
   const paginated = useCallback(() => {
     if (totalPages === 1) {
       return filtered();
@@ -124,14 +97,12 @@ const Inventory = () => {
     let total = filtered()?.length / toShow;
     return Math.ceil(total);
   }, [filtered, toShow]);
+
   return (
     <Box>
       <Box className={classes.main}>
         <Title align="center" color="rgb(0,0,0,0.8)">
           {cat?.toUpperCase()}
-        </Title>
-        <Title align="center" color="gray" order={3}>
-          {gender?.toUpperCase()}
         </Title>
       </Box>
       <Box className={classes.content}>
@@ -145,32 +116,39 @@ const Inventory = () => {
         <Filters
           showFilters={showFilters}
           setSelectedCategory={setSelectedCategory}
-          setSelectedGender={setSelectedGender}
-          setSeason={setSeason}
-          selectedGender={selectedGender}
-          setSelectedAge={setSelectedAge}
+          setSelectedtSubCategory={setSelectedtSubCategory}
+          setSelectedtSize={setSelectedtSize}
           setSelectedtType={setSelectedtType}
           selectedType={selectedType}
-          selectedAge={selectedAge}
-          selectedSeason={selectedSeason}
+          selectedSize={selectedSize}
           data={data}
           selectedCategory={selectedCategory}
         />
         <Box w={isMobile ? "100%" : "80%"} p="lg">
           <Group position="apart" mb="lg">
-            <Box>
-              <Text>
-                Price Range: {price[0]} - {price[1]}
-              </Text>
-              <RangeSlider
-                color={"blue"}
-                defaultValue={price}
-                max={5000}
-                w={isMobile ? 300 : 350}
-                // maw={}
-                onChange={(e) => setPrice(e)}
+            <Group>
+              <Box>
+                <Text>
+                  Price Range: {price[0]} - {price[1]}
+                </Text>
+                <RangeSlider
+                  color={"blue"}
+                  defaultValue={price}
+                  max={5000}
+                  w={isMobile ? 300 : 350}
+                  // maw={}
+                  onChange={(e) => setPrice(e)}
+                />
+              </Box>
+              <Select
+                m={isMobile ? "auto" : ""}
+                data={["All", "Eastern", "Western"]}
+                label="Product Type"
+                w={155}
+                onChange={setSelectedtType}
+                defaultValue={"All"}
               />
-            </Box>
+            </Group>
             <Group m={isMobile ? "auto" : ""}>
               <Select
                 data={[

@@ -120,16 +120,12 @@ const Home = () => {
                   <Group mt="xl" className={classes.buttons}>
                     <Button
                       label={"Shop Girls"}
-                      onClick={() =>
-                        navigate("/product-category/Girls/Clothing")
-                      }
+                      onClick={() => navigate("/product-category/Girls")}
                     />
                     <Button
                       label={"Shop Boys"}
                       color="blue"
-                      onClick={() =>
-                        navigate("/product-category/Boys/Clothing")
-                      }
+                      onClick={() => navigate("/product-category/Boys")}
                     />
                   </Group>
                   <Image src={wave1} className={classes.wave} />
@@ -147,14 +143,14 @@ const Home = () => {
           title1={"Boys"}
           title2={"Clothing"}
           text={"Incredible Quality"}
-          to="/Clothing/Boys"
+          to="/Boys"
         />
         <CategoryCard
           img={girls}
           title1={"Girls"}
           title2={"Clothing"}
           text={"World's Best Brands"}
-          to="/Clothing/Girls"
+          to="/Girls"
         />
         <CategoryCard
           img={toys}
@@ -189,7 +185,7 @@ const Home = () => {
         <Button
           label={"Shop All Products"}
           color="blue"
-          onClick={() => navigate("/product-category/Boys/Clothing")}
+          onClick={() => navigate("/product-category/Boys")}
         />
       </Center>
       <Flex direction={{ lg: "row", base: "column" }} mb="xl">
@@ -205,7 +201,7 @@ const Home = () => {
           </Text>
           <Button
             label={"Shop Colection"}
-            onClick={() => navigate("/product-category/Girls/Clothing")}
+            onClick={() => navigate("/product-category/Girls")}
           />
         </Box>
         <Image src={pink} height={440} />

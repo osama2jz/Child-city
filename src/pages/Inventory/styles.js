@@ -22,6 +22,6 @@ export const useStyles = createStyles((theme) => ({
     color: "white",
     border: "2px dashed white",
     borderRadius: "10px",
-    boxShadow: `0 0 0 3px ${theme.colors.primary}`,
+    boxShadow: `0 0 0 3px ${theme.colors.primary[0]}`,
   },
 }));
