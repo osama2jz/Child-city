@@ -9,7 +9,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   BrandFacebook,
@@ -36,15 +36,15 @@ const Header = ({ opened, toggle }) => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const { aboutUs } = useContext(UserContext);
+  const { aboutUs, cart, wishlist, user, setUser } = useContext(UserContext);
   const [show, setShow] = useState(true);
   const [open, setOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(user?.token ? true : false);
   const { classes } = useStyles({ opened, show });
-  let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
-  let cartFromLocal = JSON.parse(localStorage.getItem("cart")) ?? [];
   const [categories, setCategories] = useState([]);
-
+  useEffect(() => {
+    setIsLoggedIn(user?.token ? true : false);
+  }, [user?.token]);
   const { status } = useQuery(
     "fetchCategories",
     () => {
@@ -165,20 +165,30 @@ const Header = ({ opened, toggle }) => {
                     <Flex>
                       {obj?.subCategories.map((sub, ind2) => (
                         <Box key={ind2}>
-                          <Menu.Label>{sub?.title}</Menu.Label>
-                          {sizes.map((size, s) => (
-                            <Menu.Item
-                              key={s}
-                              onClick={() => {
-                                isMobile && toggle();
-                                navigate(
-                                  `/product-category/${obj?.title}/${sub?.title}/${size}}`
-                                );
-                              }}
-                            >
-                              {size}
-                            </Menu.Item>
-                          ))}
+                          <Menu.Label
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              navigate(
+                                `/product-category/${obj?.title}/${sub.title}`
+                              )
+                            }
+                          >
+                            {sub?.title}
+                          </Menu.Label>
+                          {sub?.showFilters &&
+                            sizes.map((size, s) => (
+                              <Menu.Item
+                                key={s}
+                                onClick={() => {
+                                  isMobile && toggle();
+                                  navigate(
+                                    `/product-category/${obj?.title}/${sub?.title}/${size}}`
+                                  );
+                                }}
+                              >
+                                {size}
+                              </Menu.Item>
+                            ))}
                         </Box>
                       ))}
                     </Flex>
@@ -206,7 +216,7 @@ const Header = ({ opened, toggle }) => {
           <Search className={classes.iconS} onClick={spotlight.open} />
           <Indicator
             color="pink"
-            label={wishlistFromLocal.length}
+            label={wishlist.length}
             styles={{ indicator: { width: 15 } }}
             size={"md"}
             style={{ display: "flex", alignItems: "center" }}
@@ -220,7 +230,7 @@ const Header = ({ opened, toggle }) => {
             color="pink"
             size={"md"}
             styles={{ indicator: { width: 15 } }}
-            label={cartFromLocal.length}
+            label={cart.length}
             style={{ display: "flex", alignItems: "center" }}
           >
             <ShoppingBag
@@ -231,7 +241,11 @@ const Header = ({ opened, toggle }) => {
           {isLoggedIn ? (
             <Logout
               className={classes.iconS}
-              onClick={() => setIsLoggedIn(false)}
+              onClick={() => {
+                localStorage.removeItem("user");
+                setIsLoggedIn(false);
+                window.location.href = "/";
+              }}
             />
           ) : (
             <User className={classes.iconS} onClick={() => setOpen(true)} />

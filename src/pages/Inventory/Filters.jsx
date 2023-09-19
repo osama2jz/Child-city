@@ -111,7 +111,7 @@ const Filters = ({
                   >
                     {sub.title}
                   </Text>
-                  {sizes.map((size, ss) => {
+                  {sub.showFilters && sizes.map((size, ss) => {
                     return (
                       <Text
                         key={ss}

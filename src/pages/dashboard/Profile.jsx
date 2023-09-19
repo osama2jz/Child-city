@@ -1,6 +1,9 @@
 import { Box, Text } from "@mantine/core";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const Profile = () => {
+  const {user}=useContext(UserContext)
   return (
     <Box
       style={{
@@ -14,10 +17,10 @@ const Profile = () => {
       }}
     >
       <Text>
-        Name: <b>Muhammad Usama</b>
+        Name: <b>{user?.name}</b>
       </Text>
       <Text>
-        Email: <b>mosama4u@gmail.com</b>
+        Email: <b>{user?.email}</b>
       </Text>
     </Box>
   );

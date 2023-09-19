@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { backendUrl } from "../constants";
 
@@ -8,7 +8,21 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   let userData = JSON.parse(localStorage.getItem("userData"));
   const [aboutUs, setAboutUs] = useState({});
-  const value = { aboutUs };
+  const [cart, setCart] = useState([]);
+  const [user, setUser] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
+  const value = {
+    aboutUs,
+    cart,
+    setCart,
+    wishlist,
+    setWishlist,
+    user,
+    setUser,
+  };
   const _ = useQuery(
     ["fetchAboutUs"],
     () => {

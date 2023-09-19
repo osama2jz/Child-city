@@ -54,15 +54,16 @@ const ProductCard = ({ data }) => {
         withPlaceholder
         width={location === "/" ? 300 : 250}
         height={location === "/" ? 300 : 250}
-        fit="contain"
+        fit="cover"
       />
       <Badge
         w={50}
         h={50}
+        fz={data?.sale ? 11 : 12}
         className={classes.badge}
         bg={data?.sale ? theme.colors.primary[0] : "pink"}
       >
-        {data?.sale ? "SALE" : "NEW"}
+        {data?.sale ? data?.sale + "% Off" : "NEW"}
       </Badge>
       <Text>{data?.title || "Title"}</Text>
       <Group>

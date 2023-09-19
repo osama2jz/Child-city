@@ -17,16 +17,17 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 import { Heart } from "tabler-icons-react";
-import pic from "../../assets/example.jpg";
 import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
-import { useLocation } from "react-router-dom";
-import toast from "react-hot-toast";
+import { UserContext } from "../../context/UserContext";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
+  const { setCart, setWishlist } = useContext(UserContext);
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const { data } = useLocation().state;
   const [selectedColor, setSelectedColor] = useState(null);
@@ -37,6 +38,7 @@ const ViewProduct = () => {
     let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
     setInWishlist(wishlistFromLocal.some((obj) => obj?._id === data?._id));
   }, [data?._id]);
+
   const addToCart = () => {
     let dataToadd = data;
     dataToadd.selectedColor = selectedColor;
@@ -48,8 +50,10 @@ const ViewProduct = () => {
         if (obj?._id === data?._id) cartFromLocal[ind] = dataToadd;
       });
       localStorage.setItem("cart", JSON.stringify(cartFromLocal));
+      setCart(cartFromLocal);
     } else {
       cartFromLocal.push(dataToadd);
+      setCart(cartFromLocal);
       localStorage.setItem("cart", JSON.stringify(cartFromLocal));
     }
     toast.success("Added to Cart!");
@@ -61,16 +65,17 @@ const ViewProduct = () => {
     if (wishlistFromLocal.some((obj) => obj?._id === data?._id)) {
       let removed = wishlistFromLocal.filter((obj) => obj?._id !== data?._id);
       localStorage.setItem("wishlist", JSON.stringify(removed));
+      setWishlist(removed);
       toast.success("Removed from Wishlist!");
       setInWishlist(false);
       return;
     }
     wishlistFromLocal.push(dataToadd);
     localStorage.setItem("wishlist", JSON.stringify(wishlistFromLocal));
+    setWishlist(wishlistFromLocal);
     toast.success("Added to Wishlist!");
     setInWishlist(true);
-  }, [data]);
-  console.log(data);
+  }, [data, setWishlist]);
   return (
     <Box>
       <Flex
@@ -204,7 +209,7 @@ const ViewProduct = () => {
           </Text>
           <Text>SKU: {data?.sku}</Text>
           <List>
-            {data.description?.split(".").map((obj, ind) => (
+            {data?.description?.split(".").map((obj, ind) => (
               <List.Item key={ind}>{obj}</List.Item>
             ))}
           </List>
