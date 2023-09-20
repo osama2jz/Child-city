@@ -65,7 +65,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path="/product-category/:cat/:subCat?/:size?"
+            path="/product-category/:cat?/:subCat?/:size?"
             element={<Inventory />}
           />
           <Route path="/wishlist" element={<Wishlist />} />

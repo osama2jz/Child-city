@@ -1,51 +1,101 @@
-import { Flex, Stack, Text, TextInput, Title } from "@mantine/core";
+import {
+  Flex,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Trash } from "tabler-icons-react";
 import Button from "../../component/Button";
 import { useForm } from "@mantine/form";
+import toast from "react-hot-toast";
+import { useMutation } from "react-query";
+import axios from "axios";
+import { backendUrl } from "../../constants";
+import { UserContext } from "../../context/UserContext";
+import AddAddress from "./AddAddress";
 
 const Settings = () => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
-  const [newAdd, setNewAdd] = useState("");
-  const [address, setAddress] = useState({
-    addresses: [
-      "address 1, islamabad pakistan",
-      "address 2, islamabad pakistan",
-      "address 3, islamabad pakistan",
-    ],
-    default: null,
-  });
+  const { user, setUser } = useContext(UserContext);
 
   const removeAddress = (ind) => {
-    let newAdd = address.addresses.filter((obj, i) => i !== ind);
+    let newAdd = user.addresses.filter((_, i) => i !== ind);
     setAddress({ addresses: newAdd, ...address.default });
   };
 
-  const addAddress = () => {
-    setAddress({
-      addresses: [...address.addresses, newAdd],
-      ...address.default,
-    });
-    setNewAdd("");
-  };
+  let addresses = user.addresses;
+  let newAdd;
+  const handleAddAddress = useMutation(
+    (ind) => {
+      newAdd = addresses.filter((_, i) => i !== ind);
+      return axios.put(
+        `${backendUrl + `/user/changeAddress/${user?.userId}`}`,
+        newAdd,
+        {
+          // headers: {
+          //   authorization: `Bearer ${user.token}`,
+          // },
+        }
+      );
+    },
+    {
+      onSuccess: (response) => {
+        toast.success(response?.data?.message);
+        form.reset();
+        close();
+        setUser({ ...user, addresses: newAdd });
+        let local = user;
+        local.addresses = newAdd;
+        localStorage.setItem("user", JSON.stringify(local));
+      },
+      onError: (err) => {
+        toast.error(err.response.data.error);
+      },
+    }
+  );
 
   const form = useForm({
     initialValues: {
       oldPassword: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
     },
 
     validate: {
       oldPassword: (value) => (value?.length < 1 ? "Enter old password" : null),
-      password: (value) =>
+      newPassword: (value) =>
         value?.length > 7 ? null : "Password must contain 8 to 15 characters.",
       confirmPassword: (value, values) =>
-        value !== values?.password ? "Passwords did not match" : null,
+        value !== values?.newPassword ? "Passwords did not match" : null,
     },
   });
-
+  const handleChangePassword = useMutation(
+    (values) => {
+      return axios.put(
+        `${backendUrl + `/user/changePassword/${user?.userId}`}`,
+        values,
+        {
+          // headers: {
+          //   authorization: `Bearer ${user.token}`,
+          // },
+        }
+      );
+    },
+    {
+      onSuccess: (response) => {
+        if (!response.data.status) return toast.error(response?.data?.message);
+        toast.success(response?.data?.message);
+        form.reset();
+      },
+      onError: (err) => {
+        toast.error(err.response.data.error);
+      },
+    }
+  );
   return (
     <Flex
       direction={isMobile ? "column" : "row"}
@@ -57,19 +107,24 @@ const Settings = () => {
     >
       <form
         style={{ width: isMobile ? "100%" : "40%" }}
-        onSubmit={form.onSubmit((values) => console.log(values))}
+        onSubmit={form.onSubmit((values) =>
+          handleChangePassword.mutate(values)
+        )}
       >
         <Stack
           style={{ border: "2px dashed rgb(0,0,0,0.2)", borderRadius: "10px" }}
           p={30}
         >
           <Title align="center">Change Password</Title>
-          <TextInput
+          <PasswordInput
             label="Old Password"
             {...form.getInputProps("oldPassword")}
           />
-          <TextInput label="New Password" {...form.getInputProps("password")} />
-          <TextInput
+          <PasswordInput
+            label="New Password"
+            {...form.getInputProps("newPassword")}
+          />
+          <PasswordInput
             label="Confirm Password"
             {...form.getInputProps("confirmPassword")}
           />
@@ -82,24 +137,27 @@ const Settings = () => {
         p={30}
       >
         <Title align="center">Manage Addresses</Title>
-        {address.addresses.map((add, ind) => (
+        {user.addresses.map((add, ind) => (
           <Flex key={ind} justify="space-between">
             <Text>
-              Address {ind + 1}: {add}
+              {ind +
+                1 +
+                "- " +
+                add.address +
+                ", " +
+                add?.city +
+                ", " +
+                add.province +
+                ", " +
+                add?.postalCode}
             </Text>
-            <Trash cursor={"pointer"} onClick={() => removeAddress(ind)} />
+            <Trash
+              cursor={"pointer"}
+              onClick={() => handleAddAddress.mutate(ind)}
+            />
           </Flex>
         ))}
-        <TextInput
-          label="Add Address"
-          value={newAdd}
-          onChange={(e) => setNewAdd(e.target.value)}
-        />
-        <Button
-          label={"Save"}
-          disabled={newAdd.length < 1}
-          onClick={() => addAddress()}
-        />
+        <AddAddress />
       </Stack>
     </Flex>
   );

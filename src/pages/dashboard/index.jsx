@@ -21,7 +21,12 @@ const Dashboard = () => {
             My Dashboard
           </Title>
         </Box>
-        <Tabs defaultValue="orders" variant="pills" my={50}>
+        <Tabs
+          defaultValue="orders"
+          variant="pills"
+          my={50}
+          styles={{ tab: { backgroundColor: "rgb(0,0,0,0.1)" } }}
+        >
           <Tabs.List position="center">
             <Tabs.Tab value="profile">Profile</Tabs.Tab>
             <Tabs.Tab value="orders">My Orders</Tabs.Tab>

@@ -1,6 +1,7 @@
 import {
   Anchor,
   Box,
+  Divider,
   FileInput,
   Flex,
   Group,
@@ -18,7 +19,7 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -40,9 +41,11 @@ const Cart = () => {
   const [paymentMode, setPaymentMode] = useState("cod");
   const [subtotal, setSubtotal] = useState(0);
   const [validate, setValidate] = useState(false);
+  const [myAddresses, setMyAddresses] = useState([]);
   const [file, setFile] = useState(null);
   const [coupenOff, setCoupenOff] = useState(0);
   const [loading, setLoading] = useState(null);
+  const [tempAdd, setTempAdd] = useState(-1);
   const [address, setAddress] = useState({
     province: "",
     city: "",
@@ -78,7 +81,6 @@ const Cart = () => {
     const removed = wishlist.filter((_, index) => index !== ind);
     localStorage.setItem("cart", JSON.stringify(removed));
     setCart(removed);
-    console.log(ind, removed);
     setWishlist(removed);
     toast.success("Removed from Cart!");
     return;
@@ -140,6 +142,7 @@ const Cart = () => {
         toast.success("Order Placed");
         localStorage.setItem("cart", JSON.stringify([]));
         setWishlist([]);
+        setCart([]);
       },
     }
   );
@@ -160,6 +163,25 @@ const Cart = () => {
     }
   );
 
+  useEffect(() => {
+    if (user?.addresses)
+      setMyAddresses(
+        user.addresses.map((obj, ind) => {
+          return { label: Object.values(obj).join(", "), value: ind };
+        })
+      );
+  }, [user]);
+
+  useEffect(() => {
+    if (tempAdd > -1) {
+      setAddress({
+        address: user.addresses[tempAdd].address,
+        city: user.addresses[tempAdd].city,
+        postalCode: user.addresses[tempAdd].postalCode,
+        province: user.addresses[tempAdd].province,
+      });
+    }
+  }, [myAddresses, tempAdd, user?.addresses]);
   return (
     <Box>
       <Box className={classes.main}>
@@ -194,7 +216,7 @@ const Cart = () => {
                   >
                     {obj?.title}
                   </Anchor>
-                  <Text>size: {obj?.selectedSize}</Text>
+                  <Text>Size: {obj?.selectedSize}</Text>
                   <Text>Color: {obj?.selectedColor}</Text>
                 </Stack>
                 <Group>
@@ -273,11 +295,23 @@ const Cart = () => {
                 <Text color="gray" fz="sm">
                   Shipping Address
                 </Text>
+                {user?.token && (
+                  <>
+                    <Select
+                      label="Your Addresses"
+                      placeholder="Your Addresses"
+                      data={myAddresses}
+                      onChange={setTempAdd}
+                    />
+                    <Divider label="OR" labelPosition="center" />
+                  </>
+                )}
                 <Select
                   error={
                     validate && address.province.length < 1 && "Select Province"
                   }
                   placeholder="Province"
+                  value={address.province}
                   data={[
                     "Azad Kashmir",
                     "Balochistan",
@@ -294,6 +328,7 @@ const Cart = () => {
                 />
                 <TextInput
                   placeholder="City"
+                  value={address.city}
                   onChange={(e) =>
                     setAddress((add) => ({ ...add, city: e.target.value }))
                   }
@@ -303,6 +338,7 @@ const Cart = () => {
                 />
                 <TextInput
                   placeholder="Zip Code (Optional)"
+                  value={address.postalCode}
                   type="number"
                   onChange={(e) =>
                     setAddress((add) => ({
@@ -312,6 +348,7 @@ const Cart = () => {
                   }
                 />
                 <Textarea
+                  value={address.address}
                   placeholder="Address"
                   error={
                     validate && address.address.length < 1 && "Enter Address"
@@ -410,7 +447,7 @@ const Cart = () => {
                 size={isMobile ? "xs" : "md"}
                 disabled={wishlist.length < 1}
                 onClick={Validate}
-                loading={loading && loading < 100}
+                loading={(loading && loading < 100) || handleOrder.isLoading}
               />
             </Group>
           </Stack>

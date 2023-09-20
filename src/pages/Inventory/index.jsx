@@ -63,7 +63,7 @@ const Inventory = () => {
 
   //set filters
   useEffect(() => {
-    setSelectedCategory(cat);
+    setSelectedCategory(cat || "");
     setSelectedtSubCategory(subCat || "");
     setSelectedtSize(size || "");
   }, [cat, size, subCat]);
@@ -183,9 +183,7 @@ const Inventory = () => {
           </Group>
           <Group position="center" spacing={"lg"}>
             {sorted.length > 0 ? (
-              sorted?.map((obj, ind) => (
-                <ProductCard key={ind} data={obj} />
-              ))
+              sorted?.map((obj, ind) => <ProductCard key={ind} data={obj} />)
             ) : (
               <Stack align="center" opacity={0.4}>
                 <Image src={logo} width="200px" />

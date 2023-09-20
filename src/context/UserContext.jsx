@@ -6,7 +6,6 @@ import { backendUrl } from "../constants";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  let userData = JSON.parse(localStorage.getItem("userData"));
   const [aboutUs, setAboutUs] = useState({});
   const [cart, setCart] = useState([]);
   const [user, setUser] = useState([]);

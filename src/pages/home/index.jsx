@@ -139,7 +139,7 @@ const Home = () => {
         <Button
           label={"Shop All Products"}
           color="blue"
-          onClick={() => navigate("/product-category/Boys")}
+          onClick={() => navigate("/product-category")}
         />
       </Center>
       <Flex direction={{ lg: "row", base: "column" }} mb="xl">
