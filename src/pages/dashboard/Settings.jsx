@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   PasswordInput,
   Stack,
@@ -133,30 +134,44 @@ const Settings = () => {
       </form>
       <Stack
         w={isMobile ? "100%" : "40%"}
-        style={{ border: "2px dashed rgb(0,0,0,0.2)", borderRadius: "10px" }}
+        h={400}
+        style={{
+          border: "2px dashed rgb(0,0,0,0.2)",
+          borderRadius: "10px",
+          position: "relative",
+          
+        }}
         p={30}
       >
         <Title align="center">Manage Addresses</Title>
-        {user.addresses.map((add, ind) => (
-          <Flex key={ind} justify="space-between">
-            <Text>
-              {ind +
-                1 +
-                "- " +
-                add.address +
-                ", " +
-                add?.city +
-                ", " +
-                add.province +
-                ", " +
-                add?.postalCode}
-            </Text>
-            <Trash
-              cursor={"pointer"}
-              onClick={() => handleAddAddress.mutate(ind)}
-            />
-          </Flex>
-        ))}
+        <Stack style={{overflow: "scroll", marginBottom:'50px'}}>
+          {user?.addresses.length > 0 ? (
+            user?.addresses.map((add, ind) => (
+              <Flex key={ind} justify="space-between">
+                <Text>
+                  {ind +
+                    1 +
+                    "- " +
+                    add.address +
+                    ", " +
+                    add?.city +
+                    ", " +
+                    add.province +
+                    ", " +
+                    add?.postalCode}
+                </Text>
+                <Trash
+                  cursor={"pointer"}
+                  onClick={() => handleAddAddress.mutate(ind)}
+                />
+              </Flex>
+            ))
+          ) : (
+            <Title color="rgb(0,0,0,0.2)" order={4} align="center">
+              You dont have any addresses
+            </Title>
+          )}
+        </Stack>
         <AddAddress />
       </Stack>
     </Flex>

@@ -216,7 +216,7 @@ const Header = ({ opened, toggle }) => {
           <Search className={classes.iconS} onClick={spotlight.open} />
           <Indicator
             color="pink"
-            label={wishlist.length}
+            label={wishlist?.length}
             styles={{ indicator: { width: 15 } }}
             size={"md"}
             style={{ display: "flex", alignItems: "center" }}
@@ -230,7 +230,7 @@ const Header = ({ opened, toggle }) => {
             color="pink"
             size={"md"}
             styles={{ indicator: { width: 15 } }}
-            label={cart.length}
+            label={cart?.length}
             style={{ display: "flex", alignItems: "center" }}
           >
             <ShoppingBag

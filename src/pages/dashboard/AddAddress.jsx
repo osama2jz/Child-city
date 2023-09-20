@@ -1,4 +1,5 @@
 import {
+  Box,
   Group,
   Modal,
   Select,
@@ -61,8 +62,8 @@ const AddAddress = () => {
     }
   );
   return (
-    <>
-      <Button label={"Add Address"} onClick={open} />
+    <Box style={{ position: "absolute", bottom: 20, width: "90%" }}>
+      <Button label={"Add Address"} onClick={open} fullWidth />
       <Modal opened={opened} onClose={close} centered title="Add Address">
         <form
           onSubmit={form.onSubmit((values) => handleAddAddress.mutate(values))}
@@ -109,12 +110,12 @@ const AddAddress = () => {
                 compact={true}
                 onClick={close}
               />
-              <Button label={"Save"} type={"submit"} compact={true} />
+              <Button label={"Save"} type={"submit"} compact={true} loading={handleAddAddress.isLoading}/>
             </Group>
           </Stack>
         </form>
       </Modal>
-    </>
+    </Box>
   );
 };
 

@@ -19,6 +19,7 @@ import Wishlist from "./pages/wishlist";
 import SaleAlert from "./pages/home/saleAlert";
 import { SpotlightProvider } from "@mantine/spotlight";
 import Spotlight from "./component/Spotlight";
+import OrderReceipt from "./pages/cart/OrderReceipt";
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure(false);
@@ -76,6 +77,7 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/my-dashboard" element={<Dashboard />} />
+          <Route path="/order/receipt" element={<OrderReceipt />} />
         </Routes>
       </SpotlightProvider>
       <Footer />
