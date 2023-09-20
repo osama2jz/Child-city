@@ -45,9 +45,20 @@ const ViewProduct = () => {
     dataToadd.selectedSize = selectedSize;
     dataToadd.selectedQuantity = selectedQuantity;
     let cartFromLocal = JSON.parse(localStorage.getItem("cart")) ?? [];
-    if (cartFromLocal.some((obj) => obj?._id === data?._id)) {
+    if (
+      cartFromLocal.some(
+        (obj) =>
+          obj?._id == dataToadd?._id &&
+          obj?.selectedColor === dataToadd?.selectedColor &&
+          obj?.selectedSize === dataToadd?.selectedSize
+      )
+    ) {
       cartFromLocal.map((obj, ind) => {
-        if (obj?._id === data?._id) cartFromLocal[ind] = dataToadd;
+        if (
+          obj?.selectedColor === dataToadd?.selectedColor &&
+          obj?.selectedSize === dataToadd?.selectedSize
+        )
+          cartFromLocal[ind] = dataToadd;
       });
       localStorage.setItem("cart", JSON.stringify(cartFromLocal));
       setCart(cartFromLocal);
@@ -76,6 +87,7 @@ const ViewProduct = () => {
     toast.success("Added to Wishlist!");
     setInWishlist(true);
   }, [data, setWishlist]);
+
   return (
     <Box>
       <Flex
@@ -189,8 +201,8 @@ const ViewProduct = () => {
               label={data?.quantity < 1 ? "Out Of Stock" : "Add to Cart"}
               onClick={addToCart}
               disabled={
-                !selectedColor ||
-                !selectedSize ||
+                (data.colors.length > 0 && !selectedColor) ||
+                (data?.sizes.length > 0 && !selectedSize) ||
                 selectedQuantity < 1 ||
                 data?.quantity < 1
               }

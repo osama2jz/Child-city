@@ -113,11 +113,25 @@ const MyOrders = () => {
               <Text miw={100} align="center">
                 Date
                 <br />
-                {new Date(obj?.createdAt).getDate() + "-"+
-                  new Date(obj?.createdAt).getMonth() +"-"+
+                {new Date(obj?.createdAt).getDate() +
+                  "-" +
+                  new Date(obj?.createdAt).getMonth() +
+                  "-" +
                   new Date(obj?.createdAt).getFullYear()}
               </Text>
-              <Badge variant="gradient" miw="100px">
+              <Badge
+                variant="gradient"
+                miw="100px"
+                bg={
+                  obj?.status === "Cancelled"
+                    ? "gray"
+                    : obj?.status === "Delivered"
+                    ? "primary.0"
+                    : obj?.status === "Dispatched"
+                    ? "cyan"
+                    : ""
+                }
+              >
                 {obj?.status}
               </Badge>
             </Flex>

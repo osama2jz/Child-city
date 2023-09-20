@@ -35,6 +35,7 @@ const Inventory = () => {
   const [selectedType, setSelectedtType] = useState("");
   const [selectedSubCategory, setSelectedtSubCategory] = useState("");
   const [selectedSize, setSelectedtSize] = useState("");
+  const [sortType, setSortType] = useState("By Latest");
   const [data, setData] = useState([]);
 
   //all products
@@ -63,18 +64,22 @@ const Inventory = () => {
   //set filters
   useEffect(() => {
     setSelectedCategory(cat);
-    setSelectedtSubCategory(subCat);
-    setSelectedtSize(size);
+    setSelectedtSubCategory(subCat || "");
+    setSelectedtSize(size || "");
   }, [cat, size, subCat]);
   let totalPages = 0;
 
   //filter data
   const filtered = useCallback(() => {
-    if (selectedCategory === "") return data;
+    if (selectedCategory === "")
+      return data.filter(
+        (obj) => obj.price >= price[0] && obj.price <= price[1]
+      );
     return data.filter(
       (obj) =>
         obj.category.title === selectedCategory &&
-        obj?.subCategory?.title.includes(selectedSubCategory) &&
+        (!obj?.subCategory ||
+          obj.subCategory.title.includes(selectedSubCategory)) &&
         obj?.sizes?.join(",").includes(selectedSize) &&
         obj.price >= price[0] &&
         obj.price <= price[1]
@@ -98,11 +103,19 @@ const Inventory = () => {
     return Math.ceil(total);
   }, [filtered, toShow]);
 
+  const sorted = useMemo(() => {
+    if (sortType === "By Latest") return paginated();
+    else if (sortType === "Price Low To High")
+      return paginated().sort((a, b) => a.price - b.price);
+    else if (sortType === "Price High To Low")
+      return paginated().sort((a, b) => b.price - a.price);
+  }, [paginated, sortType]);
+  console.log(sorted);
   return (
     <Box>
       <Box className={classes.main}>
         <Title align="center" color="rgb(0,0,0,0.8)">
-          {cat?.toUpperCase()}
+          {selectedCategory?.toUpperCase() || "Shop All"}
         </Title>
       </Box>
       <Box className={classes.content}>
@@ -123,6 +136,7 @@ const Inventory = () => {
           selectedSize={selectedSize}
           data={data}
           selectedCategory={selectedCategory}
+          selectedSubCategory={selectedSubCategory}
         />
         <Box w={isMobile ? "100%" : "80%"} p="lg">
           <Group position="apart" mb="lg">
@@ -151,17 +165,12 @@ const Inventory = () => {
             </Group>
             <Group m={isMobile ? "auto" : ""}>
               <Select
-                data={[
-                  "Default",
-                  "By Popularity",
-                  "By Latest",
-                  "Low To High",
-                  "High To Low",
-                ]}
+                data={["By Latest", "Price Low To High", "Price High To Low"]}
                 color="red"
                 label="Sort By"
-                w={155}
-                defaultValue={"Default"}
+                w={170}
+                onChange={setSortType}
+                defaultValue={sortType}
               />
               <Select
                 data={["12", "24", "48", "96", "Show All"]}
@@ -173,8 +182,8 @@ const Inventory = () => {
             </Group>
           </Group>
           <Group position="center" spacing={"lg"}>
-            {paginated().length > 0 ? (
-              paginated()?.map((obj, ind) => (
+            {sorted.length > 0 ? (
+              sorted?.map((obj, ind) => (
                 <ProductCard key={ind} data={obj} />
               ))
             ) : (

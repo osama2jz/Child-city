@@ -7,21 +7,29 @@ import {
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import logo from "../../assets/example.jpg";
 import { useStyles } from "./styles";
 import { Heart, ShoppingBag } from "tabler-icons-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { UserContext } from "../../context/UserContext";
 
 const ProductCard = ({ data }) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
+  const { setWishlist } = useContext(UserContext);
   const location = useLocation().pathname;
   const [show, setShow] = useState(false);
   const { classes } = useStyles({ show });
   const [inWishlist, setInWishlist] = useState(false);
 
+  useEffect(() => {
+    let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
+    if (wishlistFromLocal.some((obj) => obj?._id === data?._id)) {
+      setInWishlist(true);
+    }
+  }, [setInWishlist, data?._id]);
   const addToWishlist = useCallback(
     (e) => {
       e.stopPropagation();
@@ -31,16 +39,18 @@ const ProductCard = ({ data }) => {
       if (wishlistFromLocal.some((obj) => obj?._id === data?._id)) {
         let removed = wishlistFromLocal.filter((obj) => obj?._id !== data?._id);
         localStorage.setItem("wishlist", JSON.stringify(removed));
+        setWishlist(removed);
         toast.success("Removed from Wishlist!");
         setInWishlist(false);
         return;
       }
       wishlistFromLocal.push(dataToadd);
       localStorage.setItem("wishlist", JSON.stringify(wishlistFromLocal));
+      setWishlist(wishlistFromLocal);
       toast.success("Added to Wishlist!");
       setInWishlist(true);
     },
-    [data]
+    [data, setWishlist]
   );
   return (
     <Box

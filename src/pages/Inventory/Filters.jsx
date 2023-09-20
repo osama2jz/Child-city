@@ -1,29 +1,24 @@
 import {
   Badge,
   Box,
-  Collapse,
-  Flex,
-  List,
-  Menu,
-  Select,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp } from "tabler-icons-react";
-import { useStyles } from "./styles";
-import Button from "../../component/Button";
-import { useQuery } from "react-query";
-import { backendUrl, sizes } from "../../constants";
 import axios from "axios";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import Button from "../../component/Button";
+import { backendUrl, sizes } from "../../constants";
+import { useStyles } from "./styles";
 
 const Filters = ({
   showFilters,
   setSelectedCategory,
   setSelectedtSubCategory,
   setSelectedtSize,
+  selectedSubCategory,
   selectedSize,
   setSelectedtType,
   selectedType,
@@ -31,14 +26,6 @@ const Filters = ({
   data,
 }) => {
   const { classes } = useStyles();
-  const [open1, setOpen1] = useState(
-    selectedCategory === "All Clothings" ||
-      selectedCategory === "Girls" ||
-      selectedCategory === "Boys" ||
-      selectedCategory === "New Born"
-      ? true
-      : false
-  );
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const [categories, setCategories] = useState([]);
 
@@ -108,25 +95,36 @@ const Filters = ({
                       setSelectedtSize("");
                       setSelectedtType("");
                     }}
+                    color={
+                      selectedSubCategory === sub?.title ? "#ff8087" : "black"
+                    }
                   >
                     {sub.title}
                   </Text>
-                  {sub.showFilters && sizes.map((size, ss) => {
-                    return (
-                      <Text
-                        key={ss}
-                        ml="md"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setSelectedCategory(obj?.title);
-                          setSelectedtSubCategory(sub?.title);
-                          setSelectedtSize(size);
-                        }}
-                      >
-                        {size}
-                      </Text>
-                    );
-                  })}
+                  {sub.showFilters &&
+                    sizes.map((size, ss) => {
+                      return (
+                        <Text
+                          key={ss}
+                          ml="md"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setSelectedCategory(obj?.title);
+                            setSelectedtSubCategory(sub?.title);
+                            setSelectedtSize(size);
+                          }}
+                          color={
+                            selectedSize === size &&
+                            selectedCategory === obj?.title &&
+                            selectedSubCategory === sub?.title
+                              ? "#ff8087"
+                              : "black"
+                          }
+                        >
+                          {size}
+                        </Text>
+                      );
+                    })}
                 </Box>
               );
             })}

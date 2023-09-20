@@ -35,7 +35,7 @@ const Cart = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const now = new Date();
-  const { user } = useContext(UserContext);
+  const { user, setCart } = useContext(UserContext);
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const [paymentMode, setPaymentMode] = useState("cod");
   const [subtotal, setSubtotal] = useState(0);
@@ -74,9 +74,11 @@ const Cart = () => {
   }, [wishlist, subtotal]);
 
   //remove
-  const handleRemove = (data) => {
-    let removed = wishlist.filter((obj) => obj?._id !== data?._id);
+  const handleRemove = (ind) => {
+    const removed = wishlist.filter((_, index) => index !== ind);
     localStorage.setItem("cart", JSON.stringify(removed));
+    setCart(removed);
+    console.log(ind, removed);
     setWishlist(removed);
     toast.success("Removed from Cart!");
     return;
@@ -216,7 +218,7 @@ const Cart = () => {
                 <Trash
                   cursor={"pointer"}
                   color="red"
-                  onClick={() => handleRemove(obj)}
+                  onClick={() => handleRemove(ind)}
                 />
               </Flex>
             ))

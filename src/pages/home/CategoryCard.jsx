@@ -3,13 +3,9 @@ import React from "react";
 import { useStyles } from "./styles";
 import { useNavigate } from "react-router-dom";
 
-const CategoryCard = ({ img, title1, title2, text }) => {
+const CategoryCard = ({ img, title1, title2, text, to}) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  let to =
-    title1 === "Boys" || title1 === "Girls" || title1 === "New Born"
-      ? `/${title1}/Clothing`
-      : `/${title1}`;
   return (
     <Box
       className={classes.card}

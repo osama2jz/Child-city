@@ -9,18 +9,20 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../../assets/logo.png";
 import { useStyles } from "./styles";
 import { Trash } from "tabler-icons-react";
 import toast from "react-hot-toast";
 import Button from "../../component/Button";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 
 const Wishlist = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const navigate = useNavigate();
+  const {  setWishlist } = useContext(UserContext);
 
   const [wishlistFromLocal, setWishlistFromLocal] = useState(
     JSON.parse(localStorage.getItem("wishlist")) ?? []
@@ -29,6 +31,7 @@ const Wishlist = () => {
     let removed = wishlistFromLocal.filter((obj) => obj?._id !== data?._id);
     localStorage.setItem("wishlist", JSON.stringify(removed));
     setWishlistFromLocal(removed);
+    setWishlist(removed);
     toast.success("Removed from Wishlist!");
     return;
   };
