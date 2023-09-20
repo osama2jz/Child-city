@@ -45,6 +45,7 @@ const Shop = () => {
               title1={obj.title}
               title2={obj?.subTitle}
               text={obj?.description}
+              to={"/" + obj?.title}
             />
           ))
         )}

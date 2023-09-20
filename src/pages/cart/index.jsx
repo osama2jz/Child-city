@@ -46,6 +46,7 @@ const Cart = () => {
   const [coupenOff, setCoupenOff] = useState(0);
   const [loading, setLoading] = useState(null);
   const [tempAdd, setTempAdd] = useState(-1);
+  const [dataForReceipt, setDataForReceipt] = useState(null);
   const [address, setAddress] = useState({
     province: "",
     city: "",
@@ -111,6 +112,7 @@ const Cart = () => {
       handleOrder.mutate();
     }
   };
+  let values = {};
   const handleOrder = useMutation(
     async () => {
       const product = wishlist.map((obj) => ({
@@ -125,24 +127,28 @@ const Cart = () => {
         .toString()
         .padStart(2, "0");
 
-      let values = {
+      values = {
         address: address,
         product: product,
         paymentMode: paymentMode,
-        totalPrice: subtotal + 149,
+        totalPrice: subtotal + (subtotal > 3000 ? 0 : 149),
         status: "Pending",
         orderNo: "CC" + `${year}${month}${day}${randomComponent}`,
       };
       if (paymentMode !== "cod") values.paymentReceipt = file;
       if (user?.token) values.userId = user?.userId;
+      // setDataForReceipt(values);
+      // console.log(dataForReceipt, "1");
       return axios.post(`${backendUrl + "/order"}`, values, {});
     },
     {
       onSuccess: (response) => {
+        console.log(dataForReceipt, "2");
         toast.success("Order Placed");
         localStorage.setItem("cart", JSON.stringify([]));
         setWishlist([]);
         setCart([]);
+        navigate("/order/receipt", { state: { data: values } });
       },
     }
   );
@@ -290,7 +296,7 @@ const Cart = () => {
                 pb={20}
               >
                 <Text color="gray" fz="sm">
-                  Rs 149
+                  Rs {subtotal > 3000 ? 0 : 149}
                 </Text>
                 <Text color="gray" fz="sm">
                   Shipping Address
@@ -383,7 +389,9 @@ const Cart = () => {
                 style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
                 pb={20}
               >
-                Rs. {(subtotal * (100 - coupenOff)) / 100 + 149}{" "}
+                Rs.{" "}
+                {(subtotal * (100 - coupenOff)) / 100 +
+                  (subtotal > 3000 ? 0 : 149)}
                 <small>(Including Tax)</small>
               </Text>
               <Text fw={600}>Payment Mode</Text>

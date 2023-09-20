@@ -1,5 +1,5 @@
 import { Box, Image, Modal } from "@mantine/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import home from "../../assets/home.jpg";
 import { X } from "tabler-icons-react";
 import { UserContext } from "../../context/UserContext";
@@ -8,6 +8,9 @@ const SaleAlert = () => {
   const { aboutUs } = useContext(UserContext);
 
   const [open, setOpen] = useState(aboutUs?.saleAlertImage ? true : false);
+  useEffect(() => {
+    setOpen(aboutUs?.saleAlertImage ? true : false);
+  }, [aboutUs?.saleAlertImage]);
   return (
     <Modal
       opened={open}

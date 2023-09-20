@@ -145,7 +145,7 @@ const Settings = () => {
       >
         <Title align="center">Manage Addresses</Title>
         <Stack style={{overflow: "scroll", marginBottom:'50px'}}>
-          {user?.addresses.length > 0 ? (
+          {user?.addresses && user?.addresses?.length > 0 ? (
             user?.addresses.map((add, ind) => (
               <Flex key={ind} justify="space-between">
                 <Text>
