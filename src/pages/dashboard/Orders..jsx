@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Badge,
   Box,
   Center,
@@ -17,42 +18,14 @@ import { backendUrl } from "../../constants";
 import { UserContext } from "../../context/UserContext";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
 
 const MyOrders = () => {
   const { classes } = useStyles();
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const theme = useMantineTheme();
-  const [orders, setOrders] = useState([
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-      size: "1-2Y",
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-    {
-      img: logo,
-      title: "CC033-Girls Dresses",
-      price: "2999",
-      salePrice: "1999",
-      inStock: true,
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
 
   const { status } = useQuery(
     "fetchOrders",
@@ -108,7 +81,8 @@ const MyOrders = () => {
               </Stack>
               <Text miw={100} align="center">
                 Quantity
-                <br /> 1
+                <br />{" "}
+                {obj.product.reduce((acc, curr) => acc + curr.quantity, 0)}
               </Text>
               <Text miw={100} align="center">
                 Date
@@ -134,6 +108,13 @@ const MyOrders = () => {
               >
                 {obj?.status}
               </Badge>
+              <Anchor
+                onClick={() =>
+                  navigate("/order/receipt", { state: { data: obj } })
+                }
+              >
+                View Invoice
+              </Anchor>
             </Flex>
           ))}
         </Stack>

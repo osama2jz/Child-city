@@ -32,7 +32,9 @@ const Footer = () => {
           <Text className={classes.item} onClick={() => navigate("/contacts")}>
             Contact Us
           </Text>
-          <Text className={classes.item}>FAQ</Text>
+          <Text className={classes.item} onClick={() => navigate("/faqs")}>
+            FAQ
+          </Text>
           <Text className={classes.item} onClick={() => navigate("/shop")}>
             BabyStreet Shop
           </Text>

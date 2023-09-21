@@ -20,6 +20,8 @@ import SaleAlert from "./pages/home/saleAlert";
 import { SpotlightProvider } from "@mantine/spotlight";
 import Spotlight from "./component/Spotlight";
 import OrderReceipt from "./pages/cart/OrderReceipt";
+import ViewBlog from "./pages/blog/ViewBlog";
+import Faqs from "./pages/faqs";
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure(false);
@@ -78,6 +80,8 @@ const App = () => {
           <Route path="/shop" element={<Shop />} />
           <Route path="/my-dashboard" element={<Dashboard />} />
           <Route path="/order/receipt" element={<OrderReceipt />} />
+          <Route path="/view-blog/:id" element={<ViewBlog />} />
+          <Route path="/faqs" element={<Faqs />} />
         </Routes>
       </SpotlightProvider>
       <Footer />

@@ -122,7 +122,7 @@ const ViewProduct = () => {
                 key={ind}
                 style={{ display: "flex", justifyContent: "center" }}
               >
-                <Image src={img} width={"100%"} fit="cover" />
+                <Image src={img} width={isMobile ? 350 : 500} fit="cover" height={isMobile ? 350 : 500} />
               </Carousel.Slide>
             ))}
           </Carousel>

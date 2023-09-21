@@ -130,6 +130,7 @@ const Header = ({ opened, toggle }) => {
           boxShadow: "0px 5px 5px rgb(0,0,0,0.1)",
         }}
       >
+        {isMobile && <Burger opened={opened} onClick={toggle} color="black" />}
         <Flex
           align="center"
           className={classes.logo}
@@ -251,7 +252,6 @@ const Header = ({ opened, toggle }) => {
             <User className={classes.iconS} onClick={() => setOpen(true)} />
           )}
         </Flex>
-        {isMobile && <Burger opened={opened} onClick={toggle} color="black" />}
       </Box>
       <Signin open={open} setOpen={setOpen} />
     </>

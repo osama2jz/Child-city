@@ -11,32 +11,38 @@ import {
 import logo from "../../assets/logo.png";
 import { useStyles } from "./styles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../component/Button";
+import { UserContext } from "../../context/UserContext";
+import { useMediaQuery } from "@mantine/hooks";
 
 const OrderReceipt = () => {
   const { classes } = useStyles();
   const { state } = useLocation();
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 1100px)");
   const [receipt, setReceipt] = useState(state?.data ?? {});
   useEffect(() => {
     setReceipt(state?.data);
   }, [state?.data]);
-  console.log(receipt);
   return (
     <Box>
       <Box className={classes.main}>
         <Title align="center" color="rgb(0,0,0,0.8)">
-          Shopping Cart
+          Order Invoice
         </Title>
       </Box>
       <Box
+        // miw={1000}
         style={{
           border: "2px dashed rgb(0,0,0,0.1)",
           width: "90%",
+          marginBlock: "50px",
           borderRadius: "20px",
           padding: "50px",
-          margin: "50px auto",
+          margin: "50px",
+        //   transform: isMobile ? "scale(0.7)" : "",
         }}
       >
         <Group position="right">
@@ -45,7 +51,8 @@ const OrderReceipt = () => {
         </Group>
         <Stack>
           <Text>
-            <b>Name: </b>Muhammad Usama
+            <b>Name: </b>
+            {user ? user.name : "Guest Customer"}
           </Text>
           <Text>
             <b>Order #: </b>
@@ -57,11 +64,11 @@ const OrderReceipt = () => {
           </Text>
           <Text>
             <b>Delivery Address: </b>
-            {receipt.address.address +
+            {receipt?.address?.address +
               ", " +
-              receipt.address.city +
+              receipt?.address?.city +
               ", " +
-              receipt.address.province}
+              receipt?.address?.province}
           </Text>
           <Title align="center" order={3}>
             {" "}
