@@ -6,11 +6,10 @@ export const useStyles = createStyles((theme, { show }) => ({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    height:300,
+    height: 300,
+    width: 250,
     cursor: "pointer",
-    [`@media (max-width: 1100px)`]: {
-      transform: "scale(0.9)",
-    },
+    [`@media (max-width: 800px)`]: {},
   },
   badge: {
     position: "absolute",

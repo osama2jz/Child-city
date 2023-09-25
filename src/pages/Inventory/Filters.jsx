@@ -1,11 +1,5 @@
-import {
-  Badge,
-  Box,
-  Stack,
-  Text,
-  Title
-} from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { Badge, Box, Collapse, Stack, Text, Title } from "@mantine/core";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
@@ -28,7 +22,8 @@ const Filters = ({
   const { classes } = useStyles();
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const [categories, setCategories] = useState([]);
-
+  const [openSection, setOpenSection] = useState("");
+  const [opened, setOpened] = useState(false);
   //all categories
   const { status } = useQuery(
     "fetchCategories",
@@ -63,6 +58,13 @@ const Filters = ({
               pos={"relative"}
               style={{ cursor: "pointer" }}
               onClick={() => {
+                if (openSection === obj.title) {
+                  setOpened(false);
+                  setOpenSection("")
+                } else {
+                  setOpenSection(obj.title)
+                  setOpened(true);
+                }
                 setSelectedCategory(obj?.title);
                 setSelectedtSubCategory("");
                 setSelectedtSize("");
@@ -86,46 +88,53 @@ const Filters = ({
             </Text>
             {obj.subCategories?.map((sub, s) => {
               return (
-                <Box key={s} ml="md">
-                  <Text
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setSelectedCategory(obj?.title);
-                      setSelectedtSubCategory(sub?.title);
-                      setSelectedtSize("");
-                      setSelectedtType("");
-                    }}
-                    color={
-                      selectedSubCategory === sub?.title ? "#ff8087" : "black"
-                    }
-                  >
-                    {sub.title}
-                  </Text>
-                  {sub.showFilters &&
-                    sizes.map((size, ss) => {
-                      return (
-                        <Text
-                          key={ss}
-                          ml="md"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedCategory(obj?.title);
-                            setSelectedtSubCategory(sub?.title);
-                            setSelectedtSize(size);
-                          }}
-                          color={
-                            selectedSize === size &&
-                            selectedCategory === obj?.title &&
-                            selectedSubCategory === sub?.title
-                              ? "#ff8087"
-                              : "black"
-                          }
-                        >
-                          {size}
-                        </Text>
-                      );
-                    })}
-                </Box>
+                <Collapse
+                  key={s}
+                  in={selectedCategory === obj?.title && opened}
+                  transitionDuration={200}
+                  transitionTimingFunction="linear"
+                >
+                  <Box ml="md">
+                    <Text
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setSelectedCategory(obj?.title);
+                        setSelectedtSubCategory(sub?.title);
+                        setSelectedtSize("");
+                        setSelectedtType("");
+                      }}
+                      color={
+                        selectedSubCategory === sub?.title ? "#ff8087" : "black"
+                      }
+                    >
+                      {sub.title}
+                    </Text>
+                    {sub.showFilters &&
+                      sizes.map((size, ss) => {
+                        return (
+                          <Text
+                            key={ss}
+                            ml="md"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setSelectedCategory(obj?.title);
+                              setSelectedtSubCategory(sub?.title);
+                              setSelectedtSize(size);
+                            }}
+                            color={
+                              selectedSize === size &&
+                              selectedCategory === obj?.title &&
+                              selectedSubCategory === sub?.title
+                                ? "#ff8087"
+                                : "black"
+                            }
+                          >
+                            {size}
+                          </Text>
+                        );
+                      })}
+                  </Box>
+                </Collapse>
               );
             })}
           </Stack>

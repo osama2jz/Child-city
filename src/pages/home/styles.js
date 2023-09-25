@@ -14,13 +14,17 @@ export const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     color: "white",
     width: "100%",
-    height: "550px",
+    height: "100%",
+    aspectRatio: "3",
     position: "relative",
+    [`@media (max-width: 1100px)`]: {
+      aspectRatio: "5/2",
+      height:'100%'
+    },
   },
   buttons: {
     zIndex: 99,
-    position:'absolute',
-
+    position: "absolute",
   },
   card: {
     position: "relative",

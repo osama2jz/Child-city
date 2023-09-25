@@ -9,7 +9,7 @@ export const useStyles = createStyles((theme) => ({
   details: {
     backgroundColor: "rgb(0,0,0,0.05)",
     borderRadius: "10px",
-    padding: "50px",
+    padding: "20px",
     marginInline: "20px",
   },
 }));

@@ -4,6 +4,7 @@ import {
   CloseButton,
   Flex,
   Indicator,
+  Loader,
   Menu,
   Text,
   useMantineTheme,
@@ -136,68 +137,72 @@ const Header = ({ opened, toggle }) => {
           className={classes.logo}
           onClick={() => navigate("/")}
         >
-          <img src={logo} width={isMobile ? 100 : 100} />
+          <img src={logo} width={isMobile ? 70 : 100} />
         </Flex>
         <Flex gap={"lg"} align={"center"} className={classes.navigationBar}>
-          {categories.slice(0, 6).map((obj, ind) => {
-            if (obj?.subCategories.length < 1)
-              return (
-                <Link
-                  key={ind}
-                  className={classes.link}
-                  to={`/product-category/${obj?.title}`}
-                  onClick={() => isMobile && toggle()}
-                >
-                  {obj?.title}
-                </Link>
-              );
-            else {
-              return (
-                <Menu trigger="hover" key={ind}>
-                  <Menu.Target>
-                    <Link
-                      className={classes.link}
-                      to={`/product-category/${obj?.title}`}
-                    >
-                      {obj?.title}
-                    </Link>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Flex>
-                      {obj?.subCategories.map((sub, ind2) => (
-                        <Box key={ind2}>
-                          <Menu.Label
-                            style={{ cursor: "pointer" }}
-                            onClick={() =>
-                              navigate(
-                                `/product-category/${obj?.title}/${sub.title}`
-                              )
-                            }
-                          >
-                            {sub?.title}
-                          </Menu.Label>
-                          {sub?.showFilters &&
-                            sizes.map((size, s) => (
-                              <Menu.Item
-                                key={s}
-                                onClick={() => {
-                                  isMobile && toggle();
-                                  navigate(
-                                    `/product-category/${obj?.title}/${sub?.title}/${size}}`
-                                  );
-                                }}
-                              >
-                                {size}
-                              </Menu.Item>
-                            ))}
-                        </Box>
-                      ))}
-                    </Flex>
-                  </Menu.Dropdown>
-                </Menu>
-              );
-            }
-          })}
+          {status === "loading" ? (
+            <Loader />
+          ) : (
+            categories.slice(0, 6).map((obj, ind) => {
+              if (obj?.subCategories.length < 1)
+                return (
+                  <Link
+                    key={ind}
+                    className={classes.link}
+                    to={`/product-category/${obj?.title}`}
+                    onClick={() => isMobile && toggle()}
+                  >
+                    {obj?.title}
+                  </Link>
+                );
+              else {
+                return (
+                  <Menu trigger="hover" key={ind}>
+                    <Menu.Target>
+                      <Link
+                        className={classes.link}
+                        to={`/product-category/${obj?.title}`}
+                      >
+                        {obj?.title}
+                      </Link>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Flex>
+                        {obj?.subCategories.map((sub, ind2) => (
+                          <Box key={ind2}>
+                            <Menu.Label
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                navigate(
+                                  `/product-category/${obj?.title}/${sub.title}`
+                                )
+                              }
+                            >
+                              {sub?.title}
+                            </Menu.Label>
+                            {sub?.showFilters &&
+                              sizes.map((size, s) => (
+                                <Menu.Item
+                                  key={s}
+                                  onClick={() => {
+                                    isMobile && toggle();
+                                    navigate(
+                                      `/product-category/${obj?.title}/${sub?.title}/${size}}`
+                                    );
+                                  }}
+                                >
+                                  {size}
+                                </Menu.Item>
+                              ))}
+                          </Box>
+                        ))}
+                      </Flex>
+                    </Menu.Dropdown>
+                  </Menu>
+                );
+              }
+            })
+          )}
           {isLoggedIn && (
             <Link
               className={classes.link}

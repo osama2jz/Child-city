@@ -5,6 +5,7 @@ import {
   Pagination,
   RangeSlider,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -47,8 +48,8 @@ const Inventory = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        data.filter((item) => !item.blocked);
-        setData(data);
+        let neww = data.filter((item) => !item.blocked);
+        setData(neww);
       },
     }
   );
@@ -181,7 +182,7 @@ const Inventory = () => {
               />
             </Group>
           </Group>
-          <Group position="center" spacing={"lg"}>
+          <Group position="center">
             {sorted.length > 0 ? (
               sorted?.map((obj, ind) => <ProductCard key={ind} data={obj} />)
             ) : (

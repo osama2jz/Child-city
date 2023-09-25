@@ -40,6 +40,15 @@ const ViewProduct = () => {
   }, [data?._id]);
 
   const addToCart = () => {
+    if (
+      (data.colors.length > 0 && !selectedColor) ||
+      (data?.sizes.length > 0 && !selectedSize) ||
+      selectedQuantity < 1 ||
+      data?.quantity < 1
+    ) {
+      toast.error("Please Select all fields");
+      return;
+    }
     let dataToadd = data;
     dataToadd.selectedColor = selectedColor;
     dataToadd.selectedSize = selectedSize;
@@ -203,7 +212,7 @@ const ViewProduct = () => {
               </Text>
             )}
             <Text color={theme.colors.primary} fw={600} fz={"26px"}>
-              Rs. {data?.price * ((100 - data?.sale) / 100)}
+              Rs. {Math.round(data?.price * ((100 - data?.sale) / 100))}
             </Text>
           </Group>
           <Group>
@@ -216,12 +225,12 @@ const ViewProduct = () => {
             <Button
               label={data?.quantity < 1 ? "Out Of Stock" : "Add to Cart"}
               onClick={addToCart}
-              disabled={
-                (data.colors.length > 0 && !selectedColor) ||
-                (data?.sizes.length > 0 && !selectedSize) ||
-                selectedQuantity < 1 ||
-                data?.quantity < 1
-              }
+              // disabled={
+              //   (data.colors.length > 0 && !selectedColor) ||
+              //   (data?.sizes.length > 0 && !selectedSize) ||
+              //   selectedQuantity < 1 ||
+              //   data?.quantity < 1
+              // }
             />
           </Group>
           <Text

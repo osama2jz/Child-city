@@ -12,8 +12,8 @@ export const UserProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("user")));
-    setWishlist(JSON.parse(localStorage.getItem("wishlist")));
-    setCart(JSON.parse(localStorage.getItem("cart")));
+    setWishlist(JSON.parse(localStorage.getItem("wishlist")) ?? []);
+    setCart(JSON.parse(localStorage.getItem("cart")) ?? []);
   }, []);
   const value = {
     aboutUs,

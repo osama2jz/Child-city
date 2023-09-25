@@ -17,10 +17,8 @@ const Spotlight = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        data.map((item) => {
-          item.serialNo = data.indexOf(item) + 1;
-        });
-        setData(data);
+        let neww = data.filter((item) => !item.blocked);
+        setData(neww);
       },
     }
   );
@@ -28,7 +26,8 @@ const Spotlight = () => {
     return {
       title: obj.title,
       icon: <Image src={obj.images[0]} width={50} />,
-      onTrigger: () => navigate(`/product/${obj._id}`, { state: { data:obj } }),
+      onTrigger: () =>
+        navigate(`/product/${obj._id}`, { state: { data: obj } }),
       description: `Price: ${obj.price}, sizes: ${obj?.sizes.join(",")}`,
     };
   });

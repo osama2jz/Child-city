@@ -1,6 +1,6 @@
 import { Box } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { BrandMessenger, BrandWhatsapp, Search } from "tabler-icons-react";
 import "./App.css";
@@ -22,9 +22,11 @@ import Spotlight from "./component/Spotlight";
 import OrderReceipt from "./pages/cart/OrderReceipt";
 import ViewBlog from "./pages/blog/ViewBlog";
 import Faqs from "./pages/faqs";
+import { UserContext } from "./context/UserContext";
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure(false);
+  const { aboutUs } = useContext(UserContext);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const App = () => {
           justifyContent: "center",
           alignItems: "center",
         }}
-        onClick={() => window.open(`https://m.me/geonews`)}
+        onClick={() => window.open(`https://m.me/${aboutUs.facebook}`)}
       >
         <BrandMessenger color="white" size={30} />
       </Box>

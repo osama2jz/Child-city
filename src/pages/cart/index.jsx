@@ -162,7 +162,7 @@ const Cart = () => {
 
   const handleCoupen = useMutation(
     async () => {
-      return await axios.post(`${backendUrl + `/coupen/${coupen}`}`, {});
+      return await axios.post(`${backendUrl + `/coupen/${coupen}/${userDetails.phone}`}`, {});
     },
     {
       onSuccess: (response) => {
@@ -241,7 +241,7 @@ const Cart = () => {
                     </Text>
                   )}
                   <Text color={theme.colors.primary}>
-                    Rs. {obj?.price * ((100 - obj?.sale) / 100)}
+                    Rs. {Math.round(obj?.price * ((100 - obj?.sale) / 100))}
                   </Text>
                 </Group>
                 <NumberInput
@@ -267,7 +267,7 @@ const Cart = () => {
           )}
         </Stack>
         {wishlist.length > 0 && (
-          <Stack className={classes.details} w={isMobile ? "100%" : "35%"}>
+          <Stack className={classes.details} w={isMobile ? "90%" : "35%"}>
             <Text
               fw={500}
               style={{ borderBottom: "1px solid rgb(0,0,0,0.2)" }}
@@ -275,7 +275,7 @@ const Cart = () => {
             >
               Cart Totals
             </Text>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={2} w={'100%'}>
               <Text fw={600}>Subtotal</Text>
               <Stack spacing={"5px"}>
                 {wishlist.map((obj, ind) => {
@@ -406,7 +406,7 @@ const Cart = () => {
               <Group position="apart">
                 <TextInput
                   placeholder="Code"
-                  maxLength={8}
+                  maxLength={11}
                   w={120}
                   onChange={(e) => setCoupen(e.target.value)}
                 />
@@ -414,7 +414,7 @@ const Cart = () => {
                   label={"Apply"}
                   compact={true}
                   size="xs"
-                  disabled={coupen.length !== 8}
+                  disabled={coupen.length !== 11}
                   onClick={handleCoupen.mutate}
                 />
               </Group>
@@ -485,12 +485,14 @@ const Cart = () => {
               <Button
                 label={"Continue Shopping"}
                 color="blue"
+                compact={true}
                 size={isMobile ? "xs" : "md"}
                 onClick={() => navigate("/")}
               />
               <Button
                 label={"PROCEED TO PAY"}
                 size={isMobile ? "xs" : "md"}
+                compact={true}
                 disabled={wishlist.length < 1}
                 onClick={Validate}
                 loading={(loading && loading < 100) || handleOrder.isLoading}

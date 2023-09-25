@@ -57,12 +57,13 @@ const ProductCard = ({ data }) => {
       className={classes.main}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
+      mb="md"
       onClick={() => navigate(`/product/${data?._id}`, { state: { data } })}
     >
       <Image
         src={data?.images?.[0]}
         withPlaceholder
-        width={location === "/" ? 300 : 250}
+        width={location === "/"  ? 300 : 250}
         height={location === "/" ? 300 : 250}
         fit="cover"
       />
@@ -83,7 +84,7 @@ const ProductCard = ({ data }) => {
           </Text>
         )}
         <Text color={theme.colors.primary}>
-          Rs {data?.price * ((100 - data?.sale) / 100)}
+          Rs {Math.round(data?.price * ((100 - data?.sale) / 100))}
         </Text>
       </Group>
       <Group className={classes.hover}>
