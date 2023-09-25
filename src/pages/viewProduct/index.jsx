@@ -122,7 +122,23 @@ const ViewProduct = () => {
                 key={ind}
                 style={{ display: "flex", justifyContent: "center" }}
               >
-                <Image src={img} width={isMobile ? 350 : 500} fit="cover" height={isMobile ? 350 : 500} />
+                {img.includes(".mp4") ? (
+                  <iframe
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      // minHeight: "500px",
+                    }}
+                    src={img}
+                  />
+                ) : (
+                  <Image
+                    src={img}
+                    width={isMobile ? 350 : 500}
+                    fit="cover"
+                    height={isMobile ? 350 : 500}
+                  />
+                )}
               </Carousel.Slide>
             ))}
           </Carousel>

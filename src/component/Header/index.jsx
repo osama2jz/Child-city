@@ -139,7 +139,7 @@ const Header = ({ opened, toggle }) => {
           <img src={logo} width={isMobile ? 100 : 100} />
         </Flex>
         <Flex gap={"lg"} align={"center"} className={classes.navigationBar}>
-          {categories.map((obj, ind) => {
+          {categories.slice(0, 6).map((obj, ind) => {
             if (obj?.subCategories.length < 1)
               return (
                 <Link

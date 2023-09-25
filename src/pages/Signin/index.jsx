@@ -8,7 +8,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "../../component/Button";
 import { useForm } from "@mantine/form";
 import axios from "axios";
@@ -88,7 +88,7 @@ const Signin = ({ open, setOpen }) => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         setUser(response.data.user);
         toast.success("Sign in Successful.");
-        setOpen(false)
+        setOpen(false);
       },
       onError: (err) => {
         // console.log(response);
@@ -99,7 +99,11 @@ const Signin = ({ open, setOpen }) => {
   return (
     <Modal
       opened={open}
-      onClose={() => setOpen(false)}
+      onClose={() => {
+        SignInform.reset();
+        form.reset();
+        setOpen(false);
+      }}
       title="Sign In to Child City"
       centered
       size="lg"

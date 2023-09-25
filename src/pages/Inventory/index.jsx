@@ -28,7 +28,7 @@ const Inventory = () => {
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const { cat, subCat, size } = useParams();
   const [toShow, setToShow] = useState(12);
-  const [price, setPrice] = useState([0, 5000]);
+  const [price, setPrice] = useState([0, 10000]);
   const [showFilters, setShowFilters] = useState(true);
   const [activePage, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");

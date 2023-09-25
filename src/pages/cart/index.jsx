@@ -46,7 +46,11 @@ const Cart = () => {
   const [coupenOff, setCoupenOff] = useState(0);
   const [loading, setLoading] = useState(null);
   const [tempAdd, setTempAdd] = useState(-1);
-  const [dataForReceipt, setDataForReceipt] = useState(null);
+  const [userDetails, setUserDetails] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
   const [address, setAddress] = useState({
     province: "",
     city: "",
@@ -104,6 +108,9 @@ const Cart = () => {
       !address.city ||
       !address.province ||
       !address.address ||
+      !userDetails.name ||
+      !userDetails.email ||
+      !userDetails.phone ||
       (paymentMode !== "cod" && !file)
     ) {
       setValidate(true);
@@ -128,6 +135,9 @@ const Cart = () => {
         .padStart(2, "0");
 
       values = {
+        name: userDetails.name,
+        email: userDetails.email,
+        phone: userDetails.phone,
         address: address,
         product: product,
         paymentMode: paymentMode,
@@ -137,13 +147,10 @@ const Cart = () => {
       };
       if (paymentMode !== "cod") values.paymentReceipt = file;
       if (user?.token) values.userId = user?.userId;
-      // setDataForReceipt(values);
-      // console.log(dataForReceipt, "1");
       return axios.post(`${backendUrl + "/order"}`, values, {});
     },
     {
       onSuccess: (response) => {
-        console.log(dataForReceipt, "2");
         toast.success("Order Placed");
         localStorage.setItem("cart", JSON.stringify([]));
         setWishlist([]);
@@ -301,6 +308,37 @@ const Cart = () => {
                 <Text color="gray" fz="sm">
                   Shipping Address
                 </Text>
+                <Text fw={"bold"}>Your Details</Text>
+                <TextInput
+                  placeholder="Full Name"
+                  onChange={(e) =>
+                    setUserDetails((u) => ({ ...u, name: e.target.value }))
+                  }
+                  error={
+                    validate && userDetails.name.length < 1 && "Enter Name"
+                  }
+                />
+                <TextInput
+                  placeholder="Email"
+                  type="email"
+                  onChange={(e) =>
+                    setUserDetails((u) => ({ ...u, email: e.target.value }))
+                  }
+                  error={
+                    validate && userDetails.email.length < 1 && "Enter Email"
+                  }
+                />
+                <TextInput
+                  placeholder="Phone Number"
+                  onChange={(e) =>
+                    setUserDetails((u) => ({ ...u, phone: e.target.value }))
+                  }
+                  error={
+                    validate &&
+                    userDetails.phone.length < 1 &&
+                    "Enter Phone Number"
+                  }
+                />
                 {user?.token && (
                   <>
                     <Select

@@ -42,7 +42,7 @@ const OrderReceipt = () => {
           borderRadius: "20px",
           padding: "50px",
           margin: "50px",
-        //   transform: isMobile ? "scale(0.7)" : "",
+          //   transform: isMobile ? "scale(0.7)" : "",
         }}
       >
         <Group position="right">
@@ -52,7 +52,15 @@ const OrderReceipt = () => {
         <Stack>
           <Text>
             <b>Name: </b>
-            {user ? user.name : "Guest Customer"}
+            {receipt.name}
+          </Text>
+          <Text>
+            <b>Email: </b>
+            {receipt.email}
+          </Text>
+          <Text>
+            <b>Phone: </b>
+            {receipt.phone}
           </Text>
           <Text>
             <b>Order #: </b>

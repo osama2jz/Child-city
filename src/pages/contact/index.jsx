@@ -12,11 +12,47 @@ import { useMediaQuery } from "@mantine/hooks";
 import React from "react";
 import { useStyles } from "./styles";
 import Button from "../../component/Button";
+import { useForm } from "@mantine/form";
+import { useMutation } from "react-query";
+import { backendUrl } from "../../constants";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Contact = () => {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 1100px)");
+  const form = useForm({
+    initialValues: {
+      customerName: "",
+      subject: "",
+      description: "",
+    },
+
+    validate: {
+      customerName: (value) =>
+        value?.length > 0 && value?.length < 30 ? null : "Enter Name",
+      subject: (value) =>
+        value?.length > 0 && value?.length < 100 ? null : "Enter Subject",
+      description: (value) => (value?.length > 0 ? null : "Enter details."),
+    },
+  });
+
+  const handleAdd = useMutation(
+    (values) => {
+      return axios.post(`${backendUrl + "/complaint"}`, values, {});
+    },
+    {
+      onSuccess: (response) => {
+        toast.success("Message Sent!");
+        form.reset();
+      },
+      onError: (err, res) => {
+        toast.error("Something went wrong!");
+      },
+    }
+  );
+
   return (
     <Box>
       <Box className={classes.main}>
@@ -44,19 +80,34 @@ const Contact = () => {
           >
             Send Us a Message
           </Title>
-          <Flex
-            direction={"column"}
-            gap={20}
-            className={classes.contact}
-            p="xl"
-          >
-            <TextInput placeholder="Your Name" />
-            <TextInput placeholder="Email Address" type="email" />
-            <TextInput placeholder="Phone Number" />
-            <TextInput placeholder="Street Address" />
-            <Textarea placeholder="Message Text" minRows={5} />
-            <Button label={"Send Message"} />
-          </Flex>
+          <form onSubmit={form.onSubmit((values) => handleAdd.mutate(values))}>
+            <Flex
+              direction={"column"}
+              gap={20}
+              className={classes.contact}
+              p="xl"
+            >
+              <TextInput
+                placeholder="Your Name"
+                withAsterisk
+                {...form.getInputProps("customerName")}
+              />
+              {/* <TextInput placeholder="Email Address" type="email" /> */}
+              <TextInput
+                placeholder="Subject"
+                withAsterisk
+                {...form.getInputProps("subject")}
+              />
+              {/* <TextInput placeholder="Street Address" /> */}
+              <Textarea
+                placeholder="Message Text"
+                withAsterisk
+                minRows={6}
+                {...form.getInputProps("description")}
+              />
+              <Button label={"Send Message"} type={"submit"} />
+            </Flex>
+          </form>
         </Stack>
         <Stack w={isMobile ? "95%" : "50%"} p="xl">
           <Title

@@ -2,7 +2,7 @@ import { Box } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { BrandWhatsapp, Search } from "tabler-icons-react";
+import { BrandMessenger, BrandWhatsapp, Search } from "tabler-icons-react";
 import "./App.css";
 import Footer from "./component/Footer";
 import Header from "./component/Header";
@@ -59,6 +59,25 @@ const App = () => {
         }
       >
         <BrandWhatsapp color="white" size={30} />
+      </Box>
+      <Box
+        style={{
+          position: "fixed",
+          bottom: 80,
+          right: 20,
+          zIndex: 999,
+          padding: "10px",
+          borderRadius: "50%",
+          textAlign: "center",
+          cursor: "pointer",
+          backgroundColor: "#017cf7",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => window.open(`https://m.me/geonews`)}
+      >
+        <BrandMessenger color="white" size={30} />
       </Box>
       <SpotlightProvider
         searchPlaceholder="Search Product..."
