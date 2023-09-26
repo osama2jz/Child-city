@@ -7,9 +7,11 @@ export const useStyles = createStyles((theme, { show }) => ({
     alignItems: "center",
     position: "relative",
     height: 300,
-    width: 250,
+    // width: 250,
     cursor: "pointer",
-    [`@media (max-width: 800px)`]: {},
+    [`@media (max-width: 1100px)`]: {
+      transform: "scale(0.9)",
+    },
   },
   badge: {
     position: "absolute",

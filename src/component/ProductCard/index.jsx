@@ -63,9 +63,10 @@ const ProductCard = ({ data }) => {
       <Image
         src={data?.images?.[0]}
         withPlaceholder
-        width={location === "/"  ? 300 : 250}
+        width={location === "/" ? 300 : 250}
         height={location === "/" ? 300 : 250}
         fit="cover"
+        styles={{image: {borderRadius: "10px"} }}
       />
       <Badge
         w={50}
