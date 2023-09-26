@@ -12,6 +12,10 @@ export const useStyles = createStyles((theme, { show }) => ({
     [`@media (max-width: 1100px)`]: {
       transform: "scale(0.9)",
     },
+    [`@media (max-width: 500px)`]: {
+      height: 200,
+      width: 150,
+    },
   },
   badge: {
     position: "absolute",

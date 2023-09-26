@@ -7,17 +7,18 @@ import {
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import logo from "../../assets/example.jpg";
-import { useStyles } from "./styles";
-import { Heart, ShoppingBag } from "tabler-icons-react";
-import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Heart, ShoppingBag } from "tabler-icons-react";
 import { UserContext } from "../../context/UserContext";
+import { useStyles } from "./styles";
 
 const ProductCard = ({ data }) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 500px)");
   const { setWishlist } = useContext(UserContext);
   const location = useLocation().pathname;
   const [show, setShow] = useState(false);
@@ -63,10 +64,10 @@ const ProductCard = ({ data }) => {
       <Image
         src={data?.images?.[0]}
         withPlaceholder
-        width={location === "/" ? 300 : 250}
-        height={location === "/" ? 300 : 250}
+        width={isMobile ? 150 : 250}
+        height={isMobile ? 150 : 250}
         fit="cover"
-        styles={{image: {borderRadius: "10px"} }}
+        styles={{ image: { borderRadius: "10px" } }}
       />
       <Badge
         w={50}
@@ -77,7 +78,7 @@ const ProductCard = ({ data }) => {
       >
         {data?.sale ? data?.sale + "% Off" : "NEW"}
       </Badge>
-      <Text>{data?.title || "Title"}</Text>
+      <Text align="center">{data?.title || "Title"}</Text>
       <Group>
         {data?.sale && (
           <Text style={{ textDecoration: "line-through", opacity: 0.7 }}>

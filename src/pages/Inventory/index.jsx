@@ -182,7 +182,7 @@ const Inventory = () => {
               />
             </Group>
           </Group>
-          <Group position="center">
+          <Group position="center" spacing={isMobile ? 0 : "md"}>
             {sorted.length > 0 ? (
               sorted?.map((obj, ind) => <ProductCard key={ind} data={obj} />)
             ) : (
