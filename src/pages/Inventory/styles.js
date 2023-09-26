@@ -13,6 +13,7 @@ export const useStyles = createStyles((theme) => ({
     justifyContent: "space-between",
     [`@media (max-width: 1100px)`]: {
       flexDirection: "column",
+      padding: 20,
     },
   },
   cat: {

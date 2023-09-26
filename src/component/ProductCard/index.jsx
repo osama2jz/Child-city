@@ -64,8 +64,8 @@ const ProductCard = ({ data }) => {
       <Image
         src={data?.images?.[0]}
         withPlaceholder
-        width={isMobile ? 150 : 250}
-        height={isMobile ? 150 : 250}
+        width={isMobile ? 180 : 250}
+        height={isMobile ? 190 : 250}
         fit="cover"
         styles={{ image: { borderRadius: "10px" } }}
       />

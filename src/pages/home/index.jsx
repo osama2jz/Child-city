@@ -145,7 +145,7 @@ const Home = () => {
           <br /> Check back often and enjoy.
         </Text>
       </Stack>
-      <Group position="center" spacing={isMobile ? 20 : "50px"} my="50px">
+      <Group position="center" spacing={isMobile ? 20 : "70px"} my="50px">
         {status === "loading" ? (
           <Loader />
         ) : (

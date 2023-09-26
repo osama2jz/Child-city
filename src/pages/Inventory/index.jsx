@@ -139,7 +139,7 @@ const Inventory = () => {
           selectedCategory={selectedCategory}
           selectedSubCategory={selectedSubCategory}
         />
-        <Box w={isMobile ? "100%" : "80%"} p="lg">
+        <Box w={isMobile ? "100%" : "80%"} p={isMobile ? "xs" : "lg"}>
           <Group position="apart" mb="lg">
             <Group>
               <Box>
@@ -182,7 +182,10 @@ const Inventory = () => {
               />
             </Group>
           </Group>
-          <Group position="center" spacing={isMobile ? 0 : "md"}>
+          <Group
+            position={isMobile ? "apart" : "center"}
+            spacing={isMobile ? 0 : "md"}
+          >
             {sorted.length > 0 ? (
               sorted?.map((obj, ind) => <ProductCard key={ind} data={obj} />)
             ) : (

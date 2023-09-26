@@ -13,8 +13,8 @@ export const useStyles = createStyles((theme, { show }) => ({
       transform: "scale(0.9)",
     },
     [`@media (max-width: 500px)`]: {
-      height: 200,
-      width: 150,
+      height: 230,
+      width: 160,
     },
   },
   badge: {
@@ -24,6 +24,10 @@ export const useStyles = createStyles((theme, { show }) => ({
     color: "white",
     fontSize: 14,
     padding: 0,
+    [`@media (max-width: 500px)`]: {
+      top:0,
+      left:0
+    },
   },
   hover: {
     display: show ? "flex" : "none",
