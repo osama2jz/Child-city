@@ -24,6 +24,7 @@ import { Heart } from "tabler-icons-react";
 import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
 import { UserContext } from "../../context/UserContext";
+import namedColors from "color-name-list";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
@@ -114,7 +115,7 @@ const ViewProduct = () => {
             withIndicators
             slidesToScroll={1}
             slideSize={"100%"}
-            height={isMobile ? 350 : 500}
+            height={isMobile ? 420 : 600}
             styles={{
               indicator: {
                 width: rem(12),
@@ -145,7 +146,7 @@ const ViewProduct = () => {
                     src={img}
                     width={isMobile ? 350 : 500}
                     fit="cover"
-                    height={isMobile ? 350 : 500}
+                    height={isMobile ? 420 : 600}
                   />
                 )}
               </Carousel.Slide>
@@ -169,10 +170,13 @@ const ViewProduct = () => {
                 Colors: <b>{selectedColor}</b>
               </Text>
               {data?.colors.map((color, ind) => {
+                let someNamedColor = namedColors?.colorNameList.find(
+                  (i) => i.name.toLowerCase() === color.toLowerCase()
+                );
                 return (
                   <Tooltip key={ind} label={color}>
                     <ColorSwatch
-                      color={color}
+                      color={someNamedColor?.hex || color}
                       style={{ cursor: "pointer" }}
                       onClick={() => setSelectedColor(color)}
                     >
