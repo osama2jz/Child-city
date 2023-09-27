@@ -24,7 +24,7 @@ import { Heart } from "tabler-icons-react";
 import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
 import { UserContext } from "../../context/UserContext";
-import namedColors from "color-name-list";
+import { colorNameList } from "color-name-list";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
@@ -39,7 +39,6 @@ const ViewProduct = () => {
     let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
     setInWishlist(wishlistFromLocal.some((obj) => obj?._id === data?._id));
   }, [data?._id]);
-
   const addToCart = () => {
     if (
       (data.colors.length > 0 && !selectedColor) ||
@@ -170,7 +169,7 @@ const ViewProduct = () => {
                 Colors: <b>{selectedColor}</b>
               </Text>
               {data?.colors.map((color, ind) => {
-                let someNamedColor = namedColors?.colorNameList.find(
+                let someNamedColor = colorNameList.find(
                   (i) => i.name.toLowerCase() === color.toLowerCase()
                 );
                 return (
