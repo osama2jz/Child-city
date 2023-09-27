@@ -24,7 +24,7 @@ import { Heart } from "tabler-icons-react";
 import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
 import { UserContext } from "../../context/UserContext";
-import { colorNameList } from "color-name-list";
+import colorNameList from "color-name-list/dist/colornames.esm.mjs";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
