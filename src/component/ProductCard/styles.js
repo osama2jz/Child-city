@@ -14,7 +14,7 @@ export const useStyles = createStyles((theme, { show }) => ({
     },
     [`@media (max-width: 500px)`]: {
       height: 230,
-      width: 160,
+      width: 150,
     },
   },
   badge: {

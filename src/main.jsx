@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
       cacheTime: 30000,
     },
   },
@@ -48,7 +48,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       >
         <QueryClientProvider client={queryClient}>
           <UserProvider>
-        <Toaster />
+            <Toaster />
 
             <App />
           </UserProvider>

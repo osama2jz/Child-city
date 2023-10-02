@@ -287,7 +287,7 @@ const ViewProduct = () => {
         </Tabs.Panel>
       </Tabs> */}
 
-      <SimilarProduct />
+      <SimilarProduct cat={data.category._id}/>
     </Box>
   );
 };

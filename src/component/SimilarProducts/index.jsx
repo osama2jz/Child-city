@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import { backendUrl } from "../../constants";
 import axios from "axios";
 
-const SimilarProduct = () => {
+const SimilarProduct = ({ cat }) => {
   const [data, setData] = useState([]);
   //all products
   const { status } = useQuery(
@@ -17,7 +17,9 @@ const SimilarProduct = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        let neww = data.filter((item) => !item.blocked);
+        let neww = data.filter(
+          (item) => !item.blocked && item.category._id === cat
+        );
         setData(neww);
       },
     }
@@ -28,7 +30,6 @@ const SimilarProduct = () => {
         Similar Products
       </Title>
       <Carousel
-        withIndicators
         height={350}
         slideSize="25%"
         slideGap="md"

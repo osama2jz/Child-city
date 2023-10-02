@@ -187,7 +187,7 @@ const Header = ({ opened, toggle }) => {
                                   onClick={() => {
                                     isMobile && toggle();
                                     navigate(
-                                      `/product-category/${obj?.title}/${sub?.title}/${size}}`
+                                      `/product-category/${obj?.title}/${sub?.title}/${size}`
                                     );
                                   }}
                                 >

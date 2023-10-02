@@ -69,7 +69,7 @@ const Inventory = () => {
     setSelectedtSize(size || "");
   }, [cat, size, subCat]);
   let totalPages = 0;
-
+console.log("selectedCategory",selectedCategory, selectedSubCategory, selectedSize)
   //filter data
   const filtered = useCallback(() => {
     if (selectedCategory === "")

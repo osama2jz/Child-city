@@ -22,8 +22,8 @@ const Shop = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        data.filter((item) => !item.blocked);
-        setData(data);
+        let newData=data.filter((item) => !item.blocked);
+        setData(newData);
       },
     }
   );
