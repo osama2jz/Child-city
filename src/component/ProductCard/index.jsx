@@ -69,15 +69,25 @@ const ProductCard = ({ data }) => {
         fit="cover"
         styles={{ image: { borderRadius: "10px" } }}
       />
-      <Badge
-        w={50}
-        h={50}
-        fz={data?.sale ? 11 : 12}
-        className={classes.badge}
-        bg={data?.sale ? theme.colors.primary[0] : "pink"}
-      >
-        {data?.sale ? data?.sale + "% Off" : "NEW"}
-      </Badge>
+      {data.quantity > 0 ? (
+        <Badge
+          w={50}
+          h={50}
+          fz={data?.sale ? 11 : 12}
+          className={classes.badge}
+          bg={data?.sale ? theme.colors.primary[0] : "pink"}
+        >
+          {data?.sale
+            ? data?.sale + "% Off"
+            : data.quantity > 0
+            ? "NEW"
+            : "Out Of Stock"}
+        </Badge>
+      ) : (
+        <Badge w={120}fz={12} className={classes.badge} bg="gray">
+          Out Of Stock
+        </Badge>
+      )}
       <Text align="center">{data?.title || "Title"}</Text>
       <Group>
         {data?.sale && (
