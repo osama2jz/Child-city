@@ -22,7 +22,7 @@ const SaleAlert = () => {
         header: { display: "none" },
       }}
     >
-      <Image src={aboutUs?.saleAlertImage} fit="cover" />
+      <Image src={aboutUs?.saleAlertImage} fit="cover" withPlaceholder mih={200}/>
       <X
         cursor="pointer"
         onClick={() => setOpen(false)}

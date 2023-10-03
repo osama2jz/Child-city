@@ -69,7 +69,6 @@ const Inventory = () => {
     setSelectedtSize(size || "");
   }, [cat, size, subCat]);
   let totalPages = 0;
-console.log("selectedCategory",selectedCategory, selectedSubCategory, selectedSize)
   //filter data
   const filtered = useCallback(() => {
     if (selectedCategory === "")
@@ -111,7 +110,7 @@ console.log("selectedCategory",selectedCategory, selectedSubCategory, selectedSi
     else if (sortType === "Price High To Low")
       return paginated().sort((a, b) => b.price - a.price);
   }, [paginated, sortType]);
-  console.log(sorted);
+
   return (
     <Box>
       <Box className={classes.main}>

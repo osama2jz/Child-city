@@ -47,7 +47,7 @@ const Home = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        let neww = data.filter((item) => !item.blocked);
+        let neww = data.filter((item) => !item.blocked && item.showOnHome);
         setData(neww);
       },
     }

@@ -19,7 +19,7 @@ const Shop = () => {
     () => {
       return axios.get(backendUrl + "/category");
     },
-    {
+  {
       onSuccess: (res) => {
         const data = res.data.data;
         let newData=data.filter((item) => !item.blocked);
