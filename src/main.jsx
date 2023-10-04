@@ -7,6 +7,7 @@ import { MantineProvider } from "@mantine/core";
 import { SpotlightProvider } from "@mantine/spotlight";
 import { UserProvider } from "./context/UserContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import ReactPixel from "react-facebook-pixel";
 import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
@@ -17,7 +18,7 @@ const queryClient = new QueryClient({
     },
   },
 });
-
+ReactPixel.init("176970475088137");
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>

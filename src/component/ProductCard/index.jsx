@@ -14,6 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Heart, ShoppingBag } from "tabler-icons-react";
 import { UserContext } from "../../context/UserContext";
 import { useStyles } from "./styles";
+import ReactPixel from 'react-facebook-pixel';
 
 const ProductCard = ({ data }) => {
   const theme = useMantineTheme();
@@ -24,6 +25,10 @@ const ProductCard = ({ data }) => {
   const [show, setShow] = useState(false);
   const { classes } = useStyles({ show });
   const [inWishlist, setInWishlist] = useState(false);
+
+  useEffect(() => {
+    ReactPixel.pageView();
+  }, []);
 
   useEffect(() => {
     let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
