@@ -1,6 +1,7 @@
 import { Carousel } from "@mantine/carousel";
 import {
   Box,
+  Center,
   CheckIcon,
   Chip,
   ColorSwatch,
@@ -8,6 +9,7 @@ import {
   Group,
   Image,
   List,
+  Loader,
   NumberInput,
   Stack,
   Text,
@@ -19,26 +21,45 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { useCallback, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Heart } from "tabler-icons-react";
 import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
 import { UserContext } from "../../context/UserContext";
 import colorNameList from "color-name-list/dist/colornames.esm.mjs";
+import { useQuery } from "react-query";
+import { backendUrl } from "../../constants";
+import axios from "axios";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
   const { setCart, setWishlist } = useContext(UserContext);
   const isMobile = useMediaQuery("(max-width: 1100px)");
-  const { data } = useLocation().state;
+  const { data: statedData } = useLocation()?.state || {};
+  const [data, setData] = useState(statedData);
+  const { title } = useParams();
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [inWishlist, setInWishlist] = useState(false);
+
   useEffect(() => {
     let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
     setInWishlist(wishlistFromLocal.some((obj) => obj?._id === data?._id));
   }, [data?._id]);
+
+  const { status } = useQuery(
+    "fetchSingleProduct",
+    () => {
+      return axios.get(backendUrl + `/product/${title}`);
+    },
+    {
+      onSuccess: (res) => {
+        setData(res.data.data);
+      },
+    }
+  );
+
   const addToCart = () => {
     if (
       (data.colors.length > 0 && !selectedColor) ||
@@ -97,7 +118,11 @@ const ViewProduct = () => {
     setInWishlist(true);
   }, [data, setWishlist]);
 
-  return (
+  return status === "loading" ? (
+    <Center my="100px">
+      <Loader m="auto" />
+    </Center>
+  ) : (
     <Box>
       <Flex
         p="xl"
@@ -287,7 +312,7 @@ const ViewProduct = () => {
         </Tabs.Panel>
       </Tabs> */}
 
-      <SimilarProduct cat={data.category._id}/>
+      <SimilarProduct cat={data?.category._id} id={data?._id} />
     </Box>
   );
 };
