@@ -162,7 +162,10 @@ const Cart = () => {
 
   const handleCoupen = useMutation(
     async () => {
-      return await axios.post(`${backendUrl + `/coupen/${coupen}/${userDetails.phone}`}`, {});
+      return await axios.post(
+        `${backendUrl + `/coupen/${coupen}/${userDetails.phone}`}`,
+        {}
+      );
     },
     {
       onSuccess: (response) => {
@@ -275,7 +278,7 @@ const Cart = () => {
             >
               Cart Totals
             </Text>
-            <SimpleGrid cols={2} w={'100%'}>
+            <SimpleGrid cols={2} w={"100%"}>
               <Text fw={600}>Subtotal</Text>
               <Stack spacing={"5px"}>
                 {wishlist.map((obj, ind) => {
@@ -447,8 +450,8 @@ const Cart = () => {
                 <Text fz="sm" align="center">
                   Please transfer the amount on the account number{" "}
                   {paymentMode === "bank"
-                    ? "(pk3242432432) "
-                    : "(03367866668)  "}
+                    ? "05530010034412460010 (Allied Bank) "
+                    : "03137955522 "}
                   and upload screenshot.
                 </Text>
                 <FileInput

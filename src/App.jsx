@@ -77,7 +77,9 @@ const App = () => {
           justifyContent: "center",
           alignItems: "center",
         }}
-        onClick={() => window.open(`https://m.me/${aboutUs.facebook}`)}
+        onClick={() =>
+          window.open(`https://m.me/${aboutUs.facebook.split("/")[aboutUs.facebook.split("/").length-1]}`)
+        }
       >
         <BrandMessenger color="white" size={30} />
       </Box>

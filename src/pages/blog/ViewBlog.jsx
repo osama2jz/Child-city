@@ -2,6 +2,7 @@ import { Box, Flex, Image, Text, Title } from "@mantine/core";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useStyles } from "./styles";
+import ReactHtmlParser from "react-html-parser";
 import { useMediaQuery } from "@mantine/hooks";
 
 const ViewBlog = () => {
@@ -18,8 +19,13 @@ const ViewBlog = () => {
       <Title m={50} align="center">
         {blogData.title}
       </Title>
-      <Flex gap={40} m={50} align={'center'} direction={isMobile ? "column-reverse" : "row"}>
-        <Text align="justify">{blogData.details}</Text>
+      <Flex
+        gap={40}
+        m={50}
+        align={"center"}
+        direction={isMobile ? "column-reverse" : "row"}
+      >
+        <Text align="justify">{ReactHtmlParser(blogData.details)}</Text>
         <Image src={blogData?.image} width={400} />
       </Flex>
     </Box>

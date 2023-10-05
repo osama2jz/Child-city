@@ -1,6 +1,7 @@
 import { Image, Stack, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ReactHtmlParser from "react-html-parser";
 
 const BlogCard = ({ obj, ind }) => {
   const theme = useMantineTheme();
@@ -9,7 +10,7 @@ const BlogCard = ({ obj, ind }) => {
     <Stack
       key={ind}
       p="10px"
-      w={400}
+      w={380}
       spacing={"xs"}
       style={{
         cursor: "pointer",
@@ -27,9 +28,9 @@ const BlogCard = ({ obj, ind }) => {
       <Text fw={"bold"} fz={"lg"} color={"primary"} align="left">
         {obj?.title}
       </Text>
-      <Text align="left" lineClamp={2}>
-        {obj?.details}
-      </Text>
+      {/* <Text align="left" lineClamp={2}>
+        {ReactHtmlParser(obj?.details)}
+      </Text> */}
     </Stack>
   );
 };

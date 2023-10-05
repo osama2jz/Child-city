@@ -56,11 +56,11 @@ const Inventory = () => {
 
   //page name
   useEffect(() => {
-    document.title = cat;
+    document.title = selectedCategory || "Shop";
     return () => {
       document.title = "Child City";
     };
-  }, [cat]);
+  }, [selectedCategory]);
 
   //set filters
   useEffect(() => {

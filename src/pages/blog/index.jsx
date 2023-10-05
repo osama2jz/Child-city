@@ -1,4 +1,4 @@
-import { Box, Group, Loader, SimpleGrid, Title } from "@mantine/core";
+import { Box, Group, Loader, Title } from "@mantine/core";
 import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
