@@ -25,7 +25,7 @@ const BlogCard = ({ obj, ind }) => {
       <Text fz="xs" align="left">
         Published: {new Date(obj?.createdAt).toLocaleDateString()}
       </Text>
-      <Text fw={"bold"} fz={"lg"} color={"primary"} align="left">
+      <Text fw={"bold"} fz={"lg"} color={"primary"} align="left"  lineClamp={2}>
         {obj?.title}
       </Text>
       {/* <Text align="left" lineClamp={2}>

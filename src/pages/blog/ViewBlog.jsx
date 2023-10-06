@@ -1,14 +1,31 @@
 import { Box, Flex, Image, Text, Title } from "@mantine/core";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useStyles } from "./styles";
 import ReactHtmlParser from "react-html-parser";
 import { useMediaQuery } from "@mantine/hooks";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { backendUrl } from "../../constants";
+import { useState } from "react";
 
 const ViewBlog = () => {
   const { classes } = useStyles();
-  const { blogData } = useLocation().state;
+  let { blogData: data } = useLocation()?.state || {};
+  const [blogData, setBlogData] = useState(data);
+  const { id } = useParams();
   const isMobile = useMediaQuery("(max-width: 1100px)");
+  const { status } = useQuery(
+    "fetchSingleBlog",
+    () => {
+      return axios.get(backendUrl + `/blog/${id}`);
+    },
+    {
+      onSuccess: (res) => {
+        setBlogData(res.data.data);
+      },
+    }
+  );
   return (
     <Box>
       <Box className={classes.main}>
@@ -16,17 +33,17 @@ const ViewBlog = () => {
           Read Blog
         </Title>
       </Box>
-      <Title m={50} align="center">
-        {blogData.title}
+      <Title m={isMobile ? 20 : 50} align={isMobile ? "justify" : "center"}>
+        {blogData?.title}
       </Title>
       <Flex
         gap={40}
-        m={50}
-        align={"center"}
+        m={isMobile ? 20 : 50}
+        align={"flex-start"}
         direction={isMobile ? "column-reverse" : "row"}
       >
-        <Text align="justify">{ReactHtmlParser(blogData.details)}</Text>
-        <Image src={blogData?.image} width={400} />
+        <Text align="justify">{ReactHtmlParser(blogData?.details)}</Text>
+        <Image src={blogData?.image} width={isMobile ? "100%" : 400} />
       </Flex>
     </Box>
   );
