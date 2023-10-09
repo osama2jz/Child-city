@@ -27,12 +27,13 @@ import Button from "../../component/Button";
 import SimilarProduct from "../../component/SimilarProducts";
 import { UserContext } from "../../context/UserContext";
 import colorNameList from "color-name-list/dist/colornames.esm.mjs";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { backendUrl } from "../../constants";
 import axios from "axios";
 
 const ViewProduct = () => {
   const theme = useMantineTheme();
+  const queryClient = useQueryClient();
   const { setCart, setWishlist } = useContext(UserContext);
   const isMobile = useMediaQuery("(max-width: 1100px)");
   const { data: statedData } = useLocation()?.state || {};
@@ -47,6 +48,11 @@ const ViewProduct = () => {
     let wishlistFromLocal = JSON.parse(localStorage.getItem("wishlist")) ?? [];
     setInWishlist(wishlistFromLocal.some((obj) => obj?._id === data?._id));
   }, [data?._id]);
+
+  useEffect(() => {
+    setData(statedData);
+    queryClient.invalidateQueries("fetchProductsSimilar");
+  }, [queryClient, statedData]);
 
   const { status } = useQuery(
     "fetchSingleProduct",

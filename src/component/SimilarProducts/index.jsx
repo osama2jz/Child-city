@@ -10,7 +10,7 @@ const SimilarProduct = ({ cat, id }) => {
   const [data, setData] = useState([]);
   //all products
   const { status } = useQuery(
-    "fetchProducts",
+    "fetchProductsSimilar",
     () => {
       return axios.get(backendUrl + "/product");
     },
