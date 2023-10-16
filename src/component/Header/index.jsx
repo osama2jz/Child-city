@@ -172,11 +172,12 @@ const Header = ({ opened, toggle }) => {
                           <Box key={ind2}>
                             <Menu.Label
                               style={{ cursor: "pointer" }}
-                              onClick={() =>
+                              onClick={() => {
+                                isMobile && toggle();
                                 navigate(
                                   `/product-category/${obj?.title}/${sub.title}`
-                                )
-                              }
+                                );
+                              }}
                             >
                               {sub?.title}
                             </Menu.Label>
