@@ -141,8 +141,11 @@ const Cart = () => {
         address: address,
         product: product,
         paymentMode: paymentMode,
-        totalPrice:
-          Math.round((subtotal * (100 - coupenOff)) / 100 + (subtotal > 3000 ? 0 : 149)),
+        subtotal: subtotal,
+        coupen: coupenOff,
+        totalPrice: Math.round(
+          (subtotal * (100 - coupenOff)) / 100 + (subtotal > 3000 ? 0 : 149)
+        ),
         status: "Pending",
         orderNo: "CC" + `${year}${month}${day}${randomComponent}`,
       };
