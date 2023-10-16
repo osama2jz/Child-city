@@ -102,15 +102,20 @@ const OrderReceipt = () => {
                 <Text order={5}>{obj?.quantity}</Text>
               </Grid.Col>
               <Grid.Col span={6}>
-                <Box>
-                  <Text fw="bold">{obj?.product?.title}</Text>
-                  {obj?.product?.selectedColor && (
-                    <Text fz={"sm"}>Color: {obj?.product?.selectedColor}</Text>
-                  )}
-                  {obj?.product?.selectedSize && (
-                    <Text fz={"sm"}>Size: {obj?.product?.selectedSize}</Text>
-                  )}
-                </Box>
+                <Group>
+                  <Image src={obj?.product?.images[0]} width={50} />
+                  <Box>
+                    <Text fw="bold">{obj?.product?.title}</Text>
+                    {obj?.product?.selectedColor && (
+                      <Text fz={"sm"}>
+                        Color: {obj?.product?.selectedColor}
+                      </Text>
+                    )}
+                    {obj?.product?.selectedSize && (
+                      <Text fz={"sm"}>Size: {obj?.product?.selectedSize}</Text>
+                    )}
+                  </Box>
+                </Group>
               </Grid.Col>
               <Grid.Col span={2}>
                 <Text>
@@ -135,15 +140,14 @@ const OrderReceipt = () => {
             </Grid>
           ))}
           <Group position="right">
-            <Text>
-              SubTotal:{" "}
-              {receipt?.totalPrice < 3000
-                ? receipt?.totalPrice - 149
-                : receipt?.totalPrice}
-            </Text>
+            <Text>SubTotal: {receipt?.subtotal}</Text>
           </Group>
           <Group position="right">
             <Text>Delivery: {receipt.totalPrice > 3000 ? 0 : 149}</Text>
+          </Group>
+          <Group position="right">
+            {receipt.coupen > 0 && <Text>Coupen Discount: </Text>}
+            {receipt.coupen > 0 && <Text>{receipt.coupen}% </Text>}
           </Group>
           <Group position="right">
             <Text fw={"bold"}>Total: {receipt?.totalPrice}</Text>

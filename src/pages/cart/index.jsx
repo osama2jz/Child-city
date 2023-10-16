@@ -141,7 +141,8 @@ const Cart = () => {
         address: address,
         product: product,
         paymentMode: paymentMode,
-        totalPrice: subtotal + (subtotal > 3000 ? 0 : 149),
+        totalPrice:
+          Math.round((subtotal * (100 - coupenOff)) / 100 + (subtotal > 3000 ? 0 : 149)),
         status: "Pending",
         orderNo: "CC" + `${year}${month}${day}${randomComponent}`,
       };
@@ -155,6 +156,8 @@ const Cart = () => {
         localStorage.setItem("cart", JSON.stringify([]));
         setWishlist([]);
         setCart([]);
+        values.subtotal = subtotal;
+        values.coupen = coupenOff;
         navigate("/order/receipt", { state: { data: values } });
       },
     }
