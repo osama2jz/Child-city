@@ -132,7 +132,7 @@ const Cart = () => {
       const day = now.getDate().toString().padStart(2, "0");
       const randomComponent = Math.floor(Math.random() * 100)
         .toString()
-        .padStart(2, "0");
+        .padStart(4, "0");
 
       values = {
         name: userDetails.name,
